@@ -1,7 +1,6 @@
 load("@cxx-qt-bazel//cxx-qt-bazel:generate.bzl", generate = "cxx_qt_cmd")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-
 def qml_module(
   *, 
   name, 
@@ -19,12 +18,16 @@ def qml_module(
       qml_modules = {
         module: files
       },
-      qt_modules = ["Core", "Qml", "Network"],
       include_builtins = include_builtins,
     )
     include_builtins = False
   cc_library(
     name = name,
-    deps = [ name + "_" + module for module in modules ],
-    visibility = visibility
+    deps = [ name + "_" + module for module in modules ] + ["@qt"],
+    visibility = visibility,
+    alwayslink = True,
+    linkstatic = True,
+    defines = [
+      "QT_STATICPLUGIN",
+    ],
   )

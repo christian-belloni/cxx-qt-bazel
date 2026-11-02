@@ -1,6 +1,6 @@
 load("@cxx-qt-bazel//cxx-qt-bazel:generate.bzl", generate = "cxx_qt_cmd")
 
-bridge_core_files = [
+bridge_files = [
   "src/core/qdatetime.rs",
   "src/core/qtimezone.rs",
   "src/core/qlist/qlist_qdatetime.rs",
@@ -178,9 +178,6 @@ bridge_core_files = [
   "src/core/qvariant/qvariant_qvector3d.rs",
   "src/core/qvariant/qvariant_qvector4d.rs",
   "src/core/qvector/qvector_qcolor.rs",
-]
-
-bridge_gui_files = [
   "src/gui/qcolor.rs",
   "src/gui/qfont.rs",
   "src/gui/qguiapplication.rs",
@@ -195,9 +192,6 @@ bridge_gui_files = [
   "src/gui/qvector2d.rs",
   "src/gui/qvector3d.rs",
   "src/gui/qvector4d.rs",
-]
-
-bridge_qml_files = [
   "src/qml/qqmlapplicationengine.rs",
   "src/qml/qqmlengine.rs",
   "src/qml/qqmlimageproviderbase.rs",
@@ -238,6 +232,7 @@ cpp_core_files = [
   "src/core/qvector/qvector.cpp",
   "src/core/qdatetime.cpp",
   "src/core/qtimezone.cpp",
+  "src/core/qanystringview.cpp",
   "src/qt_types.cpp",
 ]
 
@@ -266,40 +261,20 @@ cpp_qml_files = [
   "src/qml/qqmlimageproviderbase.cpp",
 ]
 
-def cxx_qt_lib(*, name, features = [], cxx_qt, visibility = []):
-  bridge_files = []
-  bridge_files += bridge_core_files
-  cpp_files = []
-  cpp_files += cpp_core_files
-
+def cxx_qt_lib(*, name, cxx_qt, visibility = []):
   qt_modules = ["Core", "Network"]
   initializers = {
       "init_cxx_qt_lib_core": "src/core/init.cpp",
+      "init_cxx_qt_lib_gui": "src/gui/init.cpp"
   }
   extra_headers = ["#pragma once"]
-  linkopts = ["-F$(location @qt//:lib)", "-Wl", "-framework QtCore"]
 
-  if "gui" in features or "full" in features:
-    bridge_files += bridge_gui_files
-    cpp_files += cpp_gui_files
-    qt_modules.append("Gui")
-    initializers = initializers | {
-      "init_cxx_qt_lib_gui": "src/gui/init.cpp"
-    }
-    extra_headers.append("#define CXX_QT_GUI_FEATURE")
-    linkopts.append("-framework QtGui")
+  extra_headers.append("#define CXX_QT_GUI_FEATURE")
+  extra_headers.append("#define CXX_QT_QML_FEATURE")
 
-  if "qml" in features or "full" in features:
-    bridge_files += bridge_qml_files
-    cpp_files += cpp_qml_files
-    qt_modules.append("Qml")
-    extra_headers.append("#define CXX_QT_QML_FEATURE")
-    linkopts.append("-framework QtQml")
-
-  if "quickcontrols" in features or "full" in features:
-    extra_headers.append("#define CXX_QT_QUICKCONTROLS_FEATURE")
-    qt_modules.append("QuickControls2")
-    linkopts.append("-framework QtQuick")
+  # if "quickcontrols" in features or "full" in features:
+  extra_headers.append("#define CXX_QT_QUICKCONTROLS_FEATURE")
+  qt_modules.append("QuickControls2")
 
   generate(
     name = name,
@@ -307,7 +282,7 @@ def cxx_qt_lib(*, name, features = [], cxx_qt, visibility = []):
     srcs = native.glob(["include/**", "src/**", "Cargo.toml"], allow_empty = True),
     cargo_toml = "Cargo.toml",
     bridge_files = bridge_files,
-    cpp_files = cpp_files,
+    cpp_files = native.glob(["src/**/*.cpp"], allow_empty = True),
     initializers = initializers,
     cc_deps = [cxx_qt],
     crate_include_root = "include",
@@ -316,6 +291,6 @@ def cxx_qt_lib(*, name, features = [], cxx_qt, visibility = []):
     extra_headers = {
       "definitions.h": extra_headers,
     },
-    qt_modules = qt_modules,
+    # qt_modules = qt_modules,
     visibility = visibility,
   )

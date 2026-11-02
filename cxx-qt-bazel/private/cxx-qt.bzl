@@ -14,5 +14,4 @@ def cxx_qt(*, name, visibility = []):
       "init_cxx_qt_core": "src/init.cpp"
     },
     visibility = visibility,
-    qt_modules = ["Core", "Quick", "QuickControls2"]
   )

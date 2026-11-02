@@ -1,5 +1,26 @@
 crate = use_extension("@rules_rs//rs:extensions.bzl", "crate")
 
+rustc_flags = [
+  "--cfg", "cxxqt_qt_version_major=\"6\"",
+  "--cfg", "cxxqt_qt_version_minor=\"12\"",
+  "--cfg", "cxxqt_qt_version_patch=\"0\"",
+  "--cfg", "cxxqt_qt_version_at_least_6_1",
+  "--cfg", "cxxqt_qt_version_at_least_6_2",
+  "--cfg", "cxxqt_qt_version_at_least_6_3",
+  "--cfg", "cxxqt_qt_version_at_least_6_4",
+  "--cfg", "cxxqt_qt_version_at_least_6_5",
+  "--cfg", "cxxqt_qt_version_at_least_6_6",
+  "--cfg", "cxxqt_qt_version_at_least_6_7",
+  "--cfg", "cxxqt_qt_version_at_least_6_8",
+  "--cfg", "cxxqt_qt_version_at_least_6_9",
+  "--cfg", "cxxqt_qt_version_at_least_6_10",
+  "--cfg", "cxxqt_qt_version_at_least_6_11",
+  "--cfg", "cxxqt_qt_version_at_least_6_12",
+  "--cfg", "cxxqt_qt_version_at_least_5",
+  "--cfg", "cxxqt_qt_version_at_least_6",
+  "--cfg", "cxxqt_qt_version_at_least_7",
+]
+
 crate.annotation(
   crate = "qtbridge-type-lib",
   gen_build_script = "off",
@@ -8,5 +29,6 @@ crate.annotation(
     "_bs_qtbridge_type_lib": "_bs_qtbridge_type_lib",
     "rustconv": "rustconv",
   },
-  link_deps = ["@cxx_qt_crates//:_bs_qtbridge_type_lib"],
+  deps = ["@cxx_qt_crates//:_bs_qtbridge_type_lib"],
+  rustc_flags = rustc_flags,
 )

@@ -2,21 +2,18 @@ load("@cxx.rs//tools/bazel:rust_cxx_bridge.bzl", "rust_cxx_bridge")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 bridge_files = [
-    "src/generated/core/qmetaobject/qmetaobject.rs",
-    "src/generated/core/qmetatype/qmetatype.rs",
-    "src/generated/core/qmetatypeinterface/qmetatypeinterface.rs",
-    "src/generated/core/qobject/qobject.rs",
-    "src/generated/core/qqmllistproperty/qqmllistproperty.rs",
-    "src/generated/testlib/qsignalspy/qsignalspy.rs",
+  "src/core/qmetaobject/mod.rs",
+  "src/core/qmetatype/mod.rs",
+  "src/core/qmetatypeinterface/mod.rs",
+  "src/core/qobject/mod.rs",
+  "src/testlib/qsignalspy/mod.rs",
 ]
 
 cpp_files = [
-    "src/generated/core/qmetaobject/cpp/qmetaobject.cpp",
-    "src/generated/core/qmetatype/cpp/qmetatype.cpp",
-    "src/generated/core/qmetatypeinterface/cpp/qmetatypeinterface.cpp",
-    "src/generated/core/qobject/cpp/qobject.cpp",
-    "src/generated/core/qqmllistproperty/cpp/qqmllistproperty.cpp",
-    "src/generated/testlib/qsignalspy/cpp/qsignalspy.cpp",
+  "src/core/qmetatype/cpp/qmetatype.cpp",
+  "src/core/qmetatypeinterface/cpp/qmetatypeinterface.cpp",
+  "src/core/qobject/cpp/qobject.cpp",
+  "src/testlib/qsignalspy/cpp/qsignalspy.cpp",
 ]
 
 def qtbridge_type_lib(*, name, visibility = [], cxx_qt_lib, rustconv_lbl):
@@ -39,8 +36,9 @@ def qtbridge_type_lib(*, name, visibility = [], cxx_qt_lib, rustconv_lbl):
   cc_library(
     name = name,
     deps = [ src.replace(".rs", "-cc") for src in bridge_files ],
-    linkstatic = True,
     visibility = visibility,
+    linkstatic = True,
+    alwayslink = True,
   )
   
   cc_library(
@@ -48,14 +46,12 @@ def qtbridge_type_lib(*, name, visibility = [], cxx_qt_lib, rustconv_lbl):
     srcs = cpp_files,
     hdrs = native.glob(["**/*.h"], allow_empty = True),
     include_prefix = "qtbridge-type-lib",
-    linkstatic = True,
     deps = [
       "@cxx.rs//:core", 
       rustconv_lbl, 
-      "@qt//:QtCore",
-      "@qt//:QtTest",
-      "@qt//:QtQml",
-      "@qt//:QtGui",
-      "@qt//:QtNetwork",
+      "@qt//:qt",
+      "@qt//:qt_hdrs",
     ],
+    alwayslink = True,
+    linkstatic = True,
   )

@@ -17,7 +17,6 @@ def build_scripts(*, prefix, visibility = [], crates_hub = "@crates", rustconv =
   cxx_qt(name = prefix + "_cxx-qt", visibility = visibility)
   cxx_qt_lib(
     name = prefix + "_cxx-qt-lib",
-    features = ["full"],
     cxx_qt =  crates_hub + "//:" + prefix + "_cxx-qt",
     visibility = visibility,
   )

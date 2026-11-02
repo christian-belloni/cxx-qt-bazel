@@ -77,7 +77,7 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 name = "basic"
 version = "0.1.0"
 dependencies = [
- "cxx-qt-build",
+ "cxx-qt-lib",
  "qtbridge",
 ]
 
@@ -209,7 +209,7 @@ checksum = "af491d569909a7e4dee0ad7db7f5341fef5c614d5b8ec8cf765732aba3cff681"
 dependencies = [
  "serde",
  "termcolor",
- "unicode-width 0.2.2",
+ "unicode-width 0.2.3",
 ]
 
 [[package]]
@@ -319,7 +319,7 @@ dependencies = [
 [[package]]
 name = "cxx-qt-build"
 version = "0.10.0"
-source = "git+https://github.com/christian-belloni/cxx-qt.git#77f5068a1389d9005bf26e0dfdc70abfae402b1d"
+source = "git+https://github.com/christian-belloni/cxx-qt.git#c32bb75d8238233ce8f793b282168157e02f1068"
 dependencies = [
  "cc",
  "codespan-reporting 0.11.1",
@@ -335,7 +335,7 @@ dependencies = [
 [[package]]
 name = "cxx-qt-gen"
 version = "0.10.0"
-source = "git+https://github.com/christian-belloni/cxx-qt.git#77f5068a1389d9005bf26e0dfdc70abfae402b1d"
+source = "git+https://github.com/christian-belloni/cxx-qt.git#c32bb75d8238233ce8f793b282168157e02f1068"
 dependencies = [
  "clang-format",
  "convert_case",
@@ -708,9 +708,9 @@ dependencies = [
 
 [[package]]
 name = "js-sys"
-version = "0.3.106"
+version = "0.3.107"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7883d941dae510fb2d978fc3fe018c71c9e2892fd38854de3e8b92c2e5ad9cc5"
+checksum = "8dc09d2154098bbf4ef54eab6b117a3c24cbbffe94046b16ee6d6d4510584d3a"
 dependencies = [
  "cfg-if",
  "futures-util",
@@ -740,9 +740,9 @@ checksum = "47d9d19d1d6efa0109d2f65ff4c85cddd50bd572e5a00127ab10987290bcefae"
 
 [[package]]
 name = "log"
-version = "0.4.34"
+version = "0.4.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9f8bd3e56ce4dfc153cf470fffbfa98c7620958b312ca5c3a4b8d5181fd13c6"
+checksum = "5d15f86d12da44cd8d4ec3c73984537eb7f4cadcb9776a575a0a8a05ca11005c"
 
 [[package]]
 name = "memchr"
@@ -774,12 +774,6 @@ checksum = "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841"
 dependencies = [
  "autocfg",
 ]
-
-[[package]]
-name = "once_cell"
-version = "1.21.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
 name = "once_cell_polyfill"
@@ -836,9 +830,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d55d956fa96f5ec02be2e13af0e20391a5aa83d6a074e3ad368959d0fab299ea"
 
 [[package]]
+name = "qmake"
+version = "0.1.0"
+
+[[package]]
 name = "qt-build-utils"
 version = "0.10.0"
-source = "git+https://github.com/christian-belloni/cxx-qt.git#77f5068a1389d9005bf26e0dfdc70abfae402b1d"
+source = "git+https://github.com/christian-belloni/cxx-qt.git#c32bb75d8238233ce8f793b282168157e02f1068"
 dependencies = [
  "anyhow",
  "cc",
@@ -850,9 +848,9 @@ dependencies = [
 
 [[package]]
 name = "qtbridge"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0cd0837cbe1afed17e0b00bcb650063e7a86a9b38d49fb716ae7952af6ea02b8"
+checksum = "4b1f45464845f3375cd55f4a03e96e557424ade46764e164efc095bf359bf67b"
 dependencies = [
  "qtbridge-gen",
  "qtbridge-interfaces",
@@ -862,9 +860,9 @@ dependencies = [
 
 [[package]]
 name = "qtbridge-build-utils"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "db92f2bba637c43461af6cd344bc726a5bb9321f4ca99ad1f5c659d7909420ee"
+checksum = "5801d0fd3e756c400aaea93f66e99e6e4b7030c13538ca701e52f45779d9dd21"
 dependencies = [
  "cc",
  "qt-build-utils",
@@ -872,22 +870,9 @@ dependencies = [
 
 [[package]]
 name = "qtbridge-gen"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dae0668fce881f48cbbebc12d407ce6a97f735511fa23241f8989b16c55f0f04"
-dependencies = [
- "proc-macro2",
- "qtbridge-build-utils",
- "qtbridge-gen-common",
- "quote",
- "syn 2.0.119",
-]
-
-[[package]]
-name = "qtbridge-gen-common"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "743b330ed2053786f5f45551dc4ba04a7a7d9c4e97a32613f639d9dc9970f3e4"
+checksum = "f4a1fccfab4ad36c6e61e9d8e5c15b6369c6dc5292ff190fbaef68614429fe82"
 dependencies = [
  "proc-macro2",
  "qtbridge-build-utils",
@@ -897,9 +882,9 @@ dependencies = [
 
 [[package]]
 name = "qtbridge-interfaces"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "faa99a01ad113bf1092bffbf3da4648b04add0a44a7f22bcf9a657254d4023fc"
+checksum = "7da031180d7e1ea520b5e9d1372a1d95651c21dcbbf881adff32811e457edc56"
 dependencies = [
  "cxx",
  "cxx-build",
@@ -911,9 +896,9 @@ dependencies = [
 
 [[package]]
 name = "qtbridge-runtime"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00c737d1839f84b2b14e77c426677cfedfcb881d5675d2e71f4ebeca31cdd4d9"
+checksum = "f48008749c95457dbdaf6d53dc8efc3c617eb5e0a78d4c4276ecbb9c578c5b13"
 dependencies = [
  "cxx",
  "cxx-build",
@@ -925,9 +910,9 @@ dependencies = [
 
 [[package]]
 name = "qtbridge-type-lib"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "111a9621eed3223c26db23b60acab4bcd9c803f68dd49126ad6e70d3e8a63082"
+checksum = "1311d95cf22398ef32c181671f3fca23861efff731459283539b8a1e76b21832"
 dependencies = [
  "cc",
  "cxx",
@@ -1036,9 +1021,9 @@ checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
 
 [[package]]
 name = "smallvec"
-version = "1.16.3"
+version = "1.16.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b3dc8af474f516a851ff4bd12db780f948b9250ad37211e4eec0bccea54e01b"
+checksum = "d0d5d4b1981b8bbbb7aed204cae5726d683d5d6ac7e74ec54122ea28f315e7c8"
 
 [[package]]
 name = "stable_deref_trait"
@@ -1169,9 +1154,9 @@ checksum = "7dd6e30e90baa6f72411720665d41d89b9a3d039dc45b8faea1ddd07f617f6af"
 
 [[package]]
 name = "unicode-width"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4ac048d71ede7ee76d585517add45da530660ef4390e49b098733c6e897f254"
+checksum = "ca718471876992059f251e33aafc334346ada08042b7661dd1fe313a9bced557"
 
 [[package]]
 name = "url"
@@ -1187,15 +1172,24 @@ dependencies = [
 
 [[package]]
 name = "utf8_iter"
-version = "1.0.4"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
+checksum = "af3bd9d3e571c26fcce9d033b87ea5ab061b8d2ffe9b7a5675d810d68f03edf0"
+dependencies = [
+ "utf_types",
+]
 
 [[package]]
 name = "utf8parse"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821"
+
+[[package]]
+name = "utf_types"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3a3b425286980a367278453f3b6d28cdcb134b574e5a35824a6ff5eebad50bb6"
 
 [[package]]
 name = "uuid"
@@ -1209,12 +1203,11 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9bb54f33acc68fd454578d9820b0bde1a1a3d17aa17bb7b6595806d02886d409"
+checksum = "a0181c14ddd6c7b8b0b0132a5f1ea2f32be0d893cd3ea97b6e3b28886b8a3d1c"
 dependencies = [
  "cfg-if",
- "once_cell",
  "rustversion",
  "wasm-bindgen-macro",
  "wasm-bindgen-shared",
@@ -1222,9 +1215,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e29d0c35b16e224a7eeb5cd2d25e3e1968fbd65604117b44d3b789d00ee8535"
+checksum = "6e931a02a39abdbf66966fc35902b5ed58344750a70885bed4ebb3d8eaf28ed9"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -1232,9 +1225,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f501a8bc3719dba86ef8ae4728879c08001bea749eb1333ac5b91e040e2a6b7"
+checksum = "2ca4b54280e455bd831e33a6b8e734baf432fe63fbc35c42ac14ce67a043a53a"
 dependencies = [
  "bumpalo",
  "proc-macro2",
@@ -1245,9 +1238,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23f0c9c52aa7cd7d77769a4cfe2a9adb1b331f489a41d912ce14513d5ab995c6"
+checksum = "3b1f9c3798725016c6ee5f2f57869ec0831e8bbc0ab0310a86e787e97f41389e"
 dependencies = [
  "unicode-ident",
 ]

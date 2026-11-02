@@ -62,6 +62,9 @@ fn main() {
 
     builder = builder.include_prefix(&include_prefix).files(args.file);
 
+    // unsafe {
+    //     std::env::set_var("TARGET", "x86_64-pc-windows-msvc");
+    // }
     match args.command {
         Command::Build => {
             builder.build();
@@ -92,7 +95,20 @@ unsafe fn setup_env(args: &Args) {
 
     unsafe {
         std::env::set_var("OUT_DIR", out_dir);
-        std::env::set_var("QMAKE", args.qmake.canonicalize().unwrap());
+        if let Some(qmake) = &args.qmake {
+            println!("running qmake {}", current_platform::CURRENT_PLATFORM);
+            std::env::set_var("QMAKE", qmake.canonicalize().unwrap());
+        } else {
+            let minimal = args
+                .minimal_root
+                .as_ref()
+                .expect("either --qmake or --minimal-root must be set")
+                .canonicalize()
+                .unwrap();
+            println!("{}", minimal.display());
+
+            std::env::set_var("QT_MINIMAL_DOWNLOAD_ROOT", minimal);
+        }
         std::env::set_var("QT_VERSION_MAJOR", "6");
 
         std::fs::create_dir_all(&args.out_dir).unwrap();
@@ -132,16 +148,16 @@ struct Args {
     qrc: Vec<PathBuf>,
 
     #[arg(long)]
-    qt_module: Vec<String>,
-
-    #[arg(long)]
     cpp_file: Vec<PathBuf>,
 
     #[arg(long)]
     out_dir: PathBuf,
 
     #[arg(long)]
-    qmake: PathBuf,
+    qmake: Option<PathBuf>,
+
+    #[arg(long)]
+    minimal_root: Option<PathBuf>,
 
     #[arg(long)]
     crate_directory: PathBuf,

@@ -105,7 +105,6 @@ def _qtbridge_project_impl(ctx):
   )
   ctx.actions.write(script, script_template, is_executable = True)
 
-  print(ctx.file._build)
   return DefaultInfo(executable = script)
 
 qtbridge_project = rule(

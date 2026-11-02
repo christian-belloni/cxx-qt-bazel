@@ -16,6 +16,7 @@ rust_binary(
     ":qml",
     # we are using Quick in qml
     "@qt//:QtQuick",
+    "@qt//:QtQuickTemplates2",
   ],
   # alwayslink = True,
 )

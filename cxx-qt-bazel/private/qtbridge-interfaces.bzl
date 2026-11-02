@@ -24,7 +24,7 @@ cpp_files = [
 def qtbridge_interfaces(*, name, rustconv, crates_hub, qtbridge_runtime, visibility = []):
   [
   rust_cxx_bridge(
-    name = src.replace(".rs", "-cc"),
+    name = src.replace(".rs", "-cc").replace("/", "_"),
     src = src,
     deps = ["_cc_files_" + name],
   )
@@ -43,8 +43,9 @@ def qtbridge_interfaces(*, name, rustconv, crates_hub, qtbridge_runtime, visibil
     name = name,
     srcs = cpp_files,
     deps = [ "_generated_" + name ],
-    linkstatic = True,
     visibility = visibility,
+    linkstatic = True,
+    alwayslink = True,
   )
   
   cc_library(
@@ -53,15 +54,10 @@ def qtbridge_interfaces(*, name, rustconv, crates_hub, qtbridge_runtime, visibil
     hdrs = native.glob(["**/*.h"], allow_empty = True),
     includes = ["src", "."],
     include_prefix = "qtbridge-interfaces",
-    linkstatic = True,
     deps = [
       crates_hub + "//:" + rustconv,
       "@cxx.rs//:core", 
-      "@qt//:QtCore",
-      "@qt//:QtTest",
-      "@qt//:QtQml",
-      "@qt//:QtGui",
-      "@qt//:QtNetwork",
+      "@qt//:qt",
       "@qt//:qt_hdrs",
       crates_hub + "//:" + qtbridge_runtime,
     ],
