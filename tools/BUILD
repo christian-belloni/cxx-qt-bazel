@@ -1,4 +1,3 @@
-load(":qmake.bzl", "qmake")
 
 alias(
   name = "qmake_osx_osx",
