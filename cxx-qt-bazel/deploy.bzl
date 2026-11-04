@@ -68,6 +68,7 @@ _deploy_win = rule(
   implementation = _deploy_win_impl,
   attrs = {
     "binary": attr.label(allow_files = True, cfg = _transition_platform),
+    "data": attr.label_list(allow_files = True, cfg = _transition_platform),
     "shared_libs": attr.label(allow_files = True, cfg = _transition_platform),
     "plugin_files": attr.label(allow_files = True, cfg = _transition_platform),
     "qml_files": attr.label(allow_files = True, cfg = _transition_platform),
@@ -76,7 +77,7 @@ _deploy_win = rule(
   toolchains = COPY_FILE_TOOLCHAINS
 )
 
-def deploy_win(*, name, binary, shared_libs, plugin_files, qml_files, visibility = []):
+def deploy_win(*, name, binary, shared_libs, plugin_files, qml_files, data = [], visibility = []):
   _deploy_win(
     name = "_dir_" + name,
     binary = binary,
@@ -93,7 +94,7 @@ def deploy_win(*, name, binary, shared_libs, plugin_files, qml_files, visibility
 
   pkg_zip(
     name = name,
-    srcs = ["_files_" + name],
+    srcs = ["_files_" + name] + data,
     visibility = visibility
   )
 
