@@ -8,7 +8,8 @@ bazel_dep(name = "cxx-qt-bazel")
 git_override(
   module_name = "cxx-qt-bazel",
   remote = "https://github.com/christian-belloni/cxx-qt-bazel.git",
-  branch = "master"
+  #branch = "master",
+  commit = "bb6026cfe20d965c9d318a69e719c95296127cf4"
 )
 
 toolchains = use_extension("@rules_rs//rs/toolchains:module_extension.bzl", "toolchains", dev_dependency = True)

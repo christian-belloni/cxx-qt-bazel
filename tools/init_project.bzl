@@ -53,18 +53,18 @@ crate.annotation(
   crate = "cxx",
   gen_build_script = "off",
   additive_build_file = "//third_party:qt.additive.BUILD",
-  extra_aliased_targets = {
+  extra_aliased_targets = {{
     "{prefix}_cxx": "{prefix}_cxx",
-  },
+  }},
   link_deps = ["@{crates_hub}//:{prefix}_cxx"]
 )
 
 crate.annotation(
   crate = "cxx-qt",
   additive_build_file = "//third_party:qt.additive.BUILD",
-  extra_aliased_targets = {
+  extra_aliased_targets = {{
     "{prefix}_cxx-qt": "{prefix}_cxx-qt",
-  },
+  }},
   gen_build_script = "off",
   deps = ["@{crates_hub}//:{prefix}_cxx-qt"],
   rustc_flags = rustc_flags
@@ -73,9 +73,9 @@ crate.annotation(
 crate.annotation(
   crate = "cxx-qt-lib",
   additive_build_file = "//third_party:qt.additive.BUILD",
-  extra_aliased_targets = {
+  extra_aliased_targets = {{
     "{prefix}_cxx-qt-lib": "{prefix}_cxx-qt-lib",
-  },
+  }},
   gen_build_script = "off",
   deps = ["@{crates_hub}//:{prefix}_cxx-qt-lib"],
   rustc_flags = rustc_flags,
@@ -85,10 +85,10 @@ crate.annotation(
   crate = "qtbridge-type-lib",
   gen_build_script = "off",
   additive_build_file = "//third_party:qt.additive.BUILD",
-  extra_aliased_targets = {
+  extra_aliased_targets = {{
     "{prefix}_qtbridge_type_lib": "{prefix}_qtbridge_type_lib",
     "rustconv": "rustconv",
-  },
+  }},
   deps = ["@{crates_hub}//:{prefix}_qtbridge_type_lib"],
   rustc_flags = rustc_flags,
 )
@@ -97,9 +97,9 @@ crate.annotation(
   crate = "qtbridge-runtime",
   gen_build_script = "off",
   additive_build_file = "//third_party:qt.additive.BUILD",
-  extra_aliased_targets = {
+  extra_aliased_targets = {{
     "{prefix}_qtbridge_runtime": "{prefix}_qtbridge_runtime",
-  },
+  }},
   deps = ["@{crates_hub}//:{prefix}_qtbridge_runtime"],
   rustc_flags = rustc_flags,
   patches = ["//third_party:double-free.patch"],
@@ -109,9 +109,9 @@ crate.annotation(
   crate = "qtbridge-interfaces",
   gen_build_script = "off",
   additive_build_file = "//third_party:qt.additive.BUILD",
-  extra_aliased_targets = {
+  extra_aliased_targets = {{
     "{prefix}_qtbridge_interfaces": "{prefix}_qtbridge_interfaces",
-  },
+  }},
   deps = ["@{crates_hub}//:{prefix}_qtbridge_interfaces"],
   rustc_flags = rustc_flags,
 )
@@ -124,20 +124,20 @@ inject_repo(crate, "cxx.rs")
 echo '''--- src/cpp/dynamicmetaobjectbuilder.cpp	2026-11-03 12:01:45
 +++ src/cpp/dynamicmetaobjectbuilder.cpp	2026-11-03 12:01:52
 @@ -70,7 +70,11 @@
- }
+ }}
  
  DynamicMetaObjectBuilder::~DynamicMetaObjectBuilder()
--{}
-+{
+-{{}}
++{{
 +#ifdef __MINGW32__
 +        m_mob.release();
 +#endif
-+}
++}}
  
  void DynamicMetaObjectBuilder::addClassInfo(rust::Str name, rust::Str value)
- {
+ {{
 @@ -150,7 +154,11 @@
-     {
+     {{
          std::unique_ptr<QMetaObject, QScopedPointerPodDeleter> metaObject(m_mob->toMetaObject());
          m_data->setMetaObject(std::move(metaObject));
 +#ifdef __MINGW32__
@@ -145,9 +145,9 @@ echo '''--- src/cpp/dynamicmetaobjectbuilder.cpp	2026-11-03 12:01:45
 +#else
          m_mob.reset();
 +#endif
-     }
+     }}
      else
-     {
+     {{
 
 ''' > $1/double-free.patch
 
