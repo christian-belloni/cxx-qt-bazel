@@ -2,6 +2,7 @@ load("@rules_rs//rs:rust_binary.bzl", "rust_binary")
 load("@cxx-qt-bazel//cxx-qt-bazel:qml_module.bzl", "qml_module")
 load("@cxx-qt-bazel//cxx-qt-bazel:rcc.bzl", "qt_resource")
 load("@cxx_qt_crates//:defs.bzl", "all_crate_deps")
+load("@cxx-qt-bazel//cxx-qt-bazel:deploy.bzl", "deploy_win", "deploy_osx")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
@@ -9,15 +10,13 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 qt_resource(
   name = "images",
   res = "res",
-  # qrc = "res/images.qrc",
 )
-
 
 qml_module(
   name = "main_qml",
   crate_name = "basic",
   modules = {
-    "ui": glob(["qml/main.qml"]),
+    "com.ui.components": ["qml/main.qml"],
   },
   visibility = ["//visibility:public"]
 )
@@ -54,6 +53,39 @@ rust_binary(
     "main_qml",
     "images"
   ],
-  data = ["@qt//:plugin_files", "@qt//:qml_files"],
   alwayslink = True,
+  data = ["@qt"]
+)
+
+deploy_win(
+  name = "packaged_win",
+  binary = ":basic",
+  shared_libs = "@qt//:shared_files",
+  plugin_files = "@qt//:plugin_files",
+  qml_files = "@qt//:qml_files",
+)
+
+deploy_osx(
+  name = "packaged_osx",
+  binary = ":basic",
+  shared_libs = "@qt//:shared_files",
+  plugin_files = "@qt//:plugin_files",
+  qml_files = "@qt//:qml_files",
+)
+
+pkg_files(
+  name = "zip_osx_files",
+  srcs = [":basic"],
+)
+
+pkg_files(
+  name = "shared",
+  srcs = ["@qt//:shared_files"],
+  strip_prefix = strip_prefix.from_pkg()
+)
+
+pkg_zip(
+  name = "zip_osx",
+  srcs = [":basic", "shared"],
+  include_runfiles = True,
 )

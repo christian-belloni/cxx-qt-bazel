@@ -5,22 +5,22 @@
 
 cxx-qt-bazel is a wrapper on [cxx-qt](https://github.com/KDAB/cxx-qt) to enable bazel based projects to compile cxx-qt-\* crates and qtbridge-\* crates
 
-## Supported platforms
+## Supported exec platforms
  - [x] osx
  - [ ] windows (not planned)
  - [ ] linux
 
 ## Supported crates
- - cxx-qt
+ - cxx-qt (0.10.*)
  - cxx-qt-lib
  - qtbridge-type-lib
  - qtbridge-runtime
  - qtbridge-interfaces
- - qtbridge
+ - qtbridge (0.4.*)
 
 ## Planned features
- - Cross compilation
- - Resource handling
+ - Cross compilation, done!
+ - Resource handling, done!
 
 ## Quickstart
 
@@ -99,8 +99,10 @@ load("@cxx-qt-bazel//cxx-qt-bazel:qml_module.bzl", "qml_module")
 qml_module(
   name = "my_qml",
   crate_name = "my-crate",
-  module_name = "com.my.module",
-  qml_files = [.. qml files ..],
+  modules = {
+    "com.my.module": [ ... ],
+  },
+  visibility = ["//visibility:public"]
 )
 
 rust_binary(
@@ -108,8 +110,6 @@ rust_binary(
   srcs = [ .. ],
   deps = [
     ":my_qml",
-    # if you're using additional Qt modules depend on them here
-    "@qt//:QtQuick",
     ...
   ],
 )

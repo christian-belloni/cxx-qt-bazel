@@ -5,8 +5,10 @@ load("@crates//:defs.bzl", "all_crate_deps")
 qml_module(
   name = "qml",
   crate_name = "qtbridge-basic",
-  module_name = "com.example.basic",
-  qml_files = ["qml/main.qml"],
+  modules = {
+    "com.example.basic": glob(["qml/main.qml"]),
+  },
+  visibility = ["//visibility:public"]
 )
 
 rust_binary(
@@ -14,9 +16,5 @@ rust_binary(
   srcs = ["src/main.rs"],
   deps = all_crate_deps() + [
     ":qml",
-    # we are using Quick in qml
-    "@qt//:QtQuick",
-    "@qt//:QtQuickTemplates2",
   ],
-  # alwayslink = True,
 )

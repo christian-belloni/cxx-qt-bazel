@@ -8,8 +8,20 @@ def qml_module(
   modules, 
   visibility = [], 
 ):
-  include_builtins = True
+  module, files = modules.popitem()
+  generate(
+    name = name + "_" + module,
+    srcs = native.glob(["**"]),
+    crate_name = crate_name,
+    cargo_toml = "Cargo.toml",
+    qml_modules = {
+      module: files
+    },
+    include_builtins = True
+  )
+
   for module, files in modules.items():
+    print(module, files)
     generate(
       name = name + "_" + module,
       srcs = native.glob(["**"]),
@@ -18,12 +30,11 @@ def qml_module(
       qml_modules = {
         module: files
       },
-      include_builtins = include_builtins,
+      include_builtins = False
     )
-    include_builtins = False
   cc_library(
     name = name,
-    deps = [ name + "_" + module for module in modules ] + ["@qt"],
+    deps = [ name + "_" + module for module in modules ] + ["@qt"] + [ name + "_" + module ],
     visibility = visibility,
     defines = [
       "QT_STATICPLUGIN",

@@ -88,6 +88,12 @@ cc_library(
   ],
 )
 
+filegroup(
+    name = "shared_files",
+    srcs = glob(["lib/*.framework/**"]),
+    visibility = ["//visibility:public"],
+)
+
 {libs}
 """
 
@@ -109,6 +115,7 @@ cc_library(
   linkopts = ["-F $(location :lib)"] + [
     "-framework {framework}",
     "-rpath $(rootpath :lib)",
+    "-rpath lib",
   ],
   include_prefix = "{framework}",
   strip_include_prefix = "lib/{framework}.framework/Headers",

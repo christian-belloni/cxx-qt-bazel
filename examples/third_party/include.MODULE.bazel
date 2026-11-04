@@ -11,9 +11,9 @@ register_toolchains(
 crate = use_extension("@rules_rs//rs:extensions.bzl", "crate")
 
 rustc_flags = [
-  "--cfg", "cxxqt_qt_version_major="6"",
-  "--cfg", "cxxqt_qt_version_minor="12"",
-  "--cfg", "cxxqt_qt_version_patch="0"",
+  "--cfg", "cxxqt_qt_version_major=\"6\"",
+  "--cfg", "cxxqt_qt_version_minor=\"12\"",
+  "--cfg", "cxxqt_qt_version_patch=\"0\"",
   "--cfg", "cxxqt_qt_version_at_least_6_1",
   "--cfg", "cxxqt_qt_version_at_least_6_2",
   "--cfg", "cxxqt_qt_version_at_least_6_3",

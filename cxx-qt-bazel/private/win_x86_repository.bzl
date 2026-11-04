@@ -321,7 +321,7 @@ filegroup(
 )
 
 filegroup(
-    name = "dll_files",
+    name = "shared_files",
     srcs = glob(["bin/*.dll"]),
     visibility = ["//visibility:public"],
 )
