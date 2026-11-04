@@ -10,6 +10,7 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 qt_resource(
   name = "images",
   res = glob(["res/**"]),
+  module_name = "Images"
 )
 
 qml_module(

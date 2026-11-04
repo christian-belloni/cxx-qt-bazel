@@ -256,7 +256,7 @@
   "moduleExtensions": {
     "//cxx-qt-bazel:extensions.bzl%qt_download": {
       "general": {
-        "bzlTransitiveDigest": "YtZAdzWYc5pakMEZHJn3QCh9cttrsmbjoGWomXt7/Y0=",
+        "bzlTransitiveDigest": "Azm+tI5SfrgJqtQ2AnVD+hcA4pPOU1g/Hl+BcVOJ9hk=",
         "usagesDigest": "Cu5iqiLVsEnpOlL4uZymZwY4qrLp7Ctr4bvtgUvQHwY=",
         "recordedInputs": [],
         "generatedRepoSpecs": {

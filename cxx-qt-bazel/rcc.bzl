@@ -9,7 +9,7 @@ def _qt_resource_impl(ctx):
 
   ctx.actions.run(
     executable = info.rcc.files_to_run.executable,
-    arguments = [qrc.path, "--name", ctx.label.name, "-g", "cpp", "-o", out_bin.path],
+    arguments = [qrc.path, "--root", "/qt/qml/" + ctx.attr.module_name, "-g", "cpp", "-o", out_bin.path],
     outputs = [out_bin],
     inputs = ctx.files.res
   )
@@ -20,14 +20,16 @@ _qt_resource = rule(
   implementation = _qt_resource_impl,
   attrs = {
     "res": attr.label_list(allow_files = True),
+    "module_name": attr.string(mandatory = True),
   },
   toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
 
-def qt_resource(*, name, res, visibility = []):
+def qt_resource(*, name, module_name, res, visibility = []):
   _qt_resource(
     name = "_%s" % name,
     res = res,
+    module_name = module_name
   )
 
   cc_library(
@@ -85,7 +87,7 @@ def _qt_localizations_impl(ctx):
   ctx.actions.run(
     executable = rcc,
     inputs = [qrc] + qms,
-    arguments = [qrc.path, "--name", ctx.label.name, "-g", "cpp", "-o", out_bin.path],
+    arguments = [qrc.path, "--root", "/qt/qml/" + ctx.attr.module_name, "-g", "cpp", "-o", out_bin.path],
     outputs = [out_bin]
   )
 
@@ -94,15 +96,17 @@ def _qt_localizations_impl(ctx):
 _qt_localizations = rule(
   implementation = _qt_localizations_impl,
   attrs = {
+    "module_name": attr.string(mandatory = True),
     "locales": attr.label_list(allow_files = True),
   },
   toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
 
-def qt_localizations(*, name, locales, visibility = []):
+def qt_localizations(*, name, locales, module_name, visibility = []):
   _qt_localizations(
     name = "_%s" % name,
-    locales = locales
+    locales = locales,
+    module_name = module_name
   )
 
   cc_library(
