@@ -41,7 +41,7 @@ native_binary(
 
 native_binary(
   name = "lconvert",
-  src = "libexec/lrelease",
+  src = "bin/lrelease",
   # data = glob(["**"]),
   out = "lconvert",
   visibility = ["//visibility:public"]
