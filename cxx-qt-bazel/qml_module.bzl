@@ -25,8 +25,6 @@ def qml_module(
     name = name,
     deps = [ name + "_" + module for module in modules ] + ["@qt"],
     visibility = visibility,
-    alwayslink = True,
-    linkstatic = True,
     defines = [
       "QT_STATICPLUGIN",
     ],

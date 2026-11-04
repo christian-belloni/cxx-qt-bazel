@@ -1,6 +1,8 @@
 load("@cxx.rs//tools/bazel:rust_cxx_bridge.bzl", "rust_cxx_bridge")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
+
+
 bridge_files = [
     "src/qabstract_item_model/proxy_cpp_bridge.rs",
     "src/qabstract_item_model/proxy_rust_bridge.rs",
@@ -41,11 +43,9 @@ def qtbridge_interfaces(*, name, rustconv, crates_hub, qtbridge_runtime, visibil
   
   cc_library(
     name = name,
-    srcs = cpp_files,
+    srcs = native.glob(["src/**/*.cpp"], allow_empty = True),
     deps = [ "_generated_" + name ],
     visibility = visibility,
-    linkstatic = True,
-    alwayslink = True,
   )
   
   cc_library(

@@ -1,6 +1,6 @@
 module(name = "cxx-qt-bazel")
 
-bazel_dep(name = "tar.bzl", version = "0.10.9")
+bazel_dep(name = "rules_pkg", version = "1.3.0")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "rules_rs", version = "0.1.3")
 bazel_dep(name = "platforms", version = "1.1.0")
@@ -68,12 +68,12 @@ inject_repo(crate, "cxx-qt-bazel")
 inject_repo(crate, "qt")
 inject_repo(crate, "cxx.rs")
 
-include("//third_party:cxx.MODULE.bazel")
-include("//third_party:cxx-qt.MODULE.bazel")
-include("//third_party:cxx-qt-lib.MODULE.bazel")
-include("//third_party:qtbridge-type-lib.MODULE.bazel")
-include("//third_party:qtbridge-runtime.MODULE.bazel")
-include("//third_party:qtbridge-interfaces.MODULE.bazel")
+include("//third_party:qt_crates.include.MODULE.bazel")
+# include("//third_party:cxx-qt.MODULE.bazel")
+# include("//third_party:cxx-qt-lib.MODULE.bazel")
+# include("//third_party:qtbridge-type-lib.MODULE.bazel")
+# include("//third_party:qtbridge-runtime.MODULE.bazel")
+# include("//third_party:qtbridge-interfaces.MODULE.bazel")
 
 qt_download = use_extension("@cxx-qt-bazel//cxx-qt-bazel:extensions.bzl", "qt_download")
 

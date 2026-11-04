@@ -1,0 +1,89 @@
+crate = use_extension("@rules_rs//rs:extensions.bzl", "crate")
+
+rustc_flags = [
+  "--cfg", "cxxqt_qt_version_major=\"6\"",
+  "--cfg", "cxxqt_qt_version_minor=\"12\"",
+  "--cfg", "cxxqt_qt_version_patch=\"0\"",
+  "--cfg", "cxxqt_qt_version_at_least_6_1",
+  "--cfg", "cxxqt_qt_version_at_least_6_2",
+  "--cfg", "cxxqt_qt_version_at_least_6_3",
+  "--cfg", "cxxqt_qt_version_at_least_6_4",
+  "--cfg", "cxxqt_qt_version_at_least_6_5",
+  "--cfg", "cxxqt_qt_version_at_least_6_6",
+  "--cfg", "cxxqt_qt_version_at_least_6_7",
+  "--cfg", "cxxqt_qt_version_at_least_6_8",
+  "--cfg", "cxxqt_qt_version_at_least_6_9",
+  "--cfg", "cxxqt_qt_version_at_least_6_10",
+  "--cfg", "cxxqt_qt_version_at_least_6_11",
+  "--cfg", "cxxqt_qt_version_at_least_6_12",
+  "--cfg", "cxxqt_qt_version_at_least_5",
+  "--cfg", "cxxqt_qt_version_at_least_6",
+  "--cfg", "cxxqt_qt_version_at_least_7",
+]
+
+crate.annotation(
+  crate = "cxx",
+  gen_build_script = "off",
+  additive_build_file = "//third_party:qt.additive.BUILD",
+  extra_aliased_targets = {
+    "_bs_cxx": "_bs_cxx",
+  },
+  link_deps = ["@cxx_qt_crates//:_bs_cxx"]
+)
+
+crate.annotation(
+  crate = "cxx-qt",
+  additive_build_file = "//third_party:qt.additive.BUILD",
+  extra_aliased_targets = {
+    "_bs_cxx-qt": "_bs_cxx-qt",
+  },
+  gen_build_script = "off",
+  deps = ["@cxx_qt_crates//:_bs_cxx-qt"],
+  rustc_flags = rustc_flags
+)
+
+crate.annotation(
+  crate = "cxx-qt-lib",
+  additive_build_file = "//third_party:qt.additive.BUILD",
+  extra_aliased_targets = {
+    "_bs_cxx-qt-lib": "_bs_cxx-qt-lib",
+  },
+  gen_build_script = "off",
+  deps = ["@cxx_qt_crates//:_bs_cxx-qt-lib"],
+  rustc_flags = rustc_flags,
+)
+
+crate.annotation(
+  crate = "qtbridge-type-lib",
+  gen_build_script = "off",
+  additive_build_file = "//third_party:qt.additive.BUILD",
+  extra_aliased_targets = {
+    "_bs_qtbridge_type_lib": "_bs_qtbridge_type_lib",
+    "rustconv": "rustconv",
+  },
+  deps = ["@cxx_qt_crates//:_bs_qtbridge_type_lib"],
+  rustc_flags = rustc_flags,
+)
+
+crate.annotation(
+  crate = "qtbridge-runtime",
+  gen_build_script = "off",
+  additive_build_file = "//third_party:qt.additive.BUILD",
+  extra_aliased_targets = {
+    "_bs_qtbridge_runtime": "_bs_qtbridge_runtime",
+  },
+  deps = ["@cxx_qt_crates//:_bs_qtbridge_runtime"],
+  rustc_flags = rustc_flags,
+  patches = ["//third_party:double-free.patch"],
+)
+
+crate.annotation(
+  crate = "qtbridge-interfaces",
+  gen_build_script = "off",
+  additive_build_file = "//third_party:qt.additive.BUILD",
+  extra_aliased_targets = {
+    "_bs_qtbridge_interfaces": "_bs_qtbridge_interfaces",
+  },
+  deps = ["@cxx_qt_crates//:_bs_qtbridge_interfaces"],
+  rustc_flags = rustc_flags,
+)

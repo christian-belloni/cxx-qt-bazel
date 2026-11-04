@@ -39,14 +39,13 @@ def qtbridge_runtime(*, name, visibility = [], rustconv, crates_hub, qtbridge_ty
   
   cc_library(
     name = name,
-    srcs = native.glob(["src/cpp/**/*.cpp"], allow_empty = True),
+    hdrs = native.glob(["**/*.h"], allow_empty = True),
+    srcs = native.glob(["src/**/*.cpp"], allow_empty = True),
     deps = [ 
       "_generated_" + name,
       "@qt//:qt",
     ],
     visibility = visibility,
-    alwayslink = True,
-    linkstatic = True,
   )
   
   cc_library(

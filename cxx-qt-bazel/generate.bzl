@@ -16,7 +16,7 @@ def _common_args(ctx, args):
 
   args.add("--qmake", info.qmake.files_to_run.executable.path)
   
-  # args.add("--minimal-root", ctx.attr._qt_files[DirectoryInfo].path)
+  # args.add("--minimal-root", ctx.attr._qt_files[DirectoryInfo].paeh)
   
   args.add("--crate-directory", toml_dir)
   args.add("--crate-name", ctx.attr.crate_name)
@@ -117,7 +117,7 @@ def _generate_initializers(ctx, args):
 
   public_initializer = _out_path(ctx, "cxx-qt-build/initializers/crate_%s/public-initializer.cpp" % ctx.attr.crate_name.replace("-", "_"))
   initializer = _out_path(ctx, "cxx-qt-build/initializers/crate_%s/call-initializers.cpp" % ctx.attr.crate_name.replace("-", "_"))
-
+  
   return public_initializer, initializer
 
 def _cxx_qt_cmd_impl(ctx):
@@ -173,7 +173,7 @@ def _cxx_qt_cmd_impl(ctx):
     }
   )
 
-  files = [cxx_header] + include_headers + extra_headers + generated_headers + generated_cpps + moc_files
+  files = [cxx_header] + include_headers + extra_headers + generated_headers + generated_cpps + moc_files + [public_initializer, initializer]
   files = depset(files + ctx.files.cpp_files)
 
   providers = [DefaultInfo(files = files), CxxQtQmlPlugin(plugin_headers = depset(moc_plugin_headers))]
@@ -192,12 +192,11 @@ _cxx_qt_cmd = rule(
     "crate_include_root": attr.string(),
     "crate_include_files": attr.label_list(allow_files = True),
     "include_dirs": attr.string_list(),
-    "qt_modules": attr.string_list(),
     "include_prefix": attr.string(),
     "extra_headers": attr.string_list_dict(),
     "qml_modules": attr.string_list_dict(),
     "include_builtins": attr.bool(default = True),
-    "_qt_files": attr.label(providers = [DirectoryInfo], default = Label("@qt//:files"))
+    "_qt_files": attr.label(providers = [DirectoryInfo], default = Label("@qt//:files")),
   },
   toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
@@ -213,8 +212,8 @@ _extract_plugin_headers = rule(
   }
 )
 
-def cxx_qt_cmd(*, name, visibility = [], qt_modules = [], cc_deps = [], **kwargs):
-  _cxx_qt_cmd(name = name + "-gen", visibility = visibility, qt_modules = qt_modules, **kwargs)
+def cxx_qt_cmd(*, name, visibility = [], cc_deps = [], **kwargs):
+  _cxx_qt_cmd(name = name + "-gen", visibility = visibility, **kwargs)
   _extract_plugin_headers(
     name = "_plugin_headers_%s" % name,
     cxx_qt_cmd = name + "-gen",

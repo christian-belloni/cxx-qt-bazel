@@ -1,0 +1,28 @@
+--- src/cpp/dynamicmetaobjectbuilder.cpp	2026-11-03 12:01:45
++++ src/cpp/dynamicmetaobjectbuilder.cpp	2026-11-03 12:01:52
+@@ -70,7 +70,11 @@
+ }
+ 
+ DynamicMetaObjectBuilder::~DynamicMetaObjectBuilder()
+-{}
++{
++#ifdef __MINGW32__
++        m_mob.release();
++#endif
++}
+ 
+ void DynamicMetaObjectBuilder::addClassInfo(rust::Str name, rust::Str value)
+ {
+@@ -150,7 +154,11 @@
+     {
+         std::unique_ptr<QMetaObject, QScopedPointerPodDeleter> metaObject(m_mob->toMetaObject());
+         m_data->setMetaObject(std::move(metaObject));
++#ifdef __MINGW32__
++        m_mob.release();
++#else
+         m_mob.reset();
++#endif
+     }
+     else
+     {
+

@@ -196,6 +196,30 @@ QT_LIBRARIES = [
 _available_libs = glob(["lib/Qt6*.lib"])
 _available_lib_names = [lib.replace("lib/", "").replace(".lib", "") for lib in _available_libs]
 
+cc_library(
+  name = "stdlib",
+  deps = [
+    "qt_stdcpp_windows_import",
+    "qt_libunwind_windows_import",
+  ],
+)
+
+cc_import(
+    name = "qt_stdcpp_windows_import",
+    shared_library = "libc++.dll",
+    target_compatible_with = ["@platforms//os:windows"],
+    alwayslink = True,
+    data = ["libc++.dll"],
+)
+
+cc_import(
+    name = "qt_libunwind_windows_import",
+    shared_library = "libunwind.dll",
+    target_compatible_with = ["@platforms//os:windows"],
+    alwayslink = True,
+    data = ["libunwind.dll"],
+)
+
 [
     cc_import(
         name = "qt_%s_windows_import" % name,
@@ -207,7 +231,7 @@ _available_lib_names = [lib.replace("lib/", "").replace(".lib", "") for lib in _
         shared_library = "bin/%s.dll" % library_name,
         target_compatible_with = ["@platforms//os:windows"],
         alwayslink = True,
-        # linkopts = ["/WHOLEARCHIVE:%s.lib" % library_name, "/DYNAMICBASE", "/FORCE"]
+        defines = ["QT_NO_DEBUG"]
     )
     for name, include_folder, library_name, _ in QT_LIBRARIES
     if library_name in _available_lib_names
@@ -228,9 +252,9 @@ _available_lib_names = [lib.replace("lib/", "").replace(".lib", "") for lib in _
         ],
         target_compatible_with = ["@platforms//os:windows"],
         visibility = ["//visibility:public"],
-        deps = [":qt_%s_windows_import" % name],
+        deps = [":qt_%s_windows_import" % name, "stdlib"],
         alwayslink = True,
-        data = ["libc++.dll", "libunwind.dll", "plugins"]
+        data = ["plugin_files", "qml_files"]
     )
     for name, include_folder, library_name, _ in QT_LIBRARIES
     if library_name in _available_lib_names
@@ -319,6 +343,8 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 """
+
+
 
 def _qt_download_win_x86_impl(repo_ctx):
 

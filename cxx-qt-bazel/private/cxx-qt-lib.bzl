@@ -198,71 +198,7 @@ bridge_files = [
   "src/quickcontrols/qquickstyle.rs",
 ]
 
-cpp_core_files = [
-  "src/core/qbytearray.cpp",
-  "src/core/qcoreapplication.cpp",
-  "src/core/qdate.cpp",
-  "src/core/qhash/qhash.cpp",
-  "src/core/qjsonarray.cpp",
-  "src/core/qjsonobject.cpp",
-  "src/core/qjsonvalue.cpp",
-  "src/core/qline.cpp",
-  "src/core/qlinef.cpp",
-  "src/core/qlist/qlist.cpp",
-  "src/core/qmap/qmap.cpp",
-  "src/core/qmargins.cpp",
-  "src/core/qmarginsf.cpp",
-  "src/core/qmodelindex.cpp",
-  "src/core/qpersistentmodelindex.cpp",
-  "src/core/qpoint.cpp",
-  "src/core/qpointf.cpp",
-  "src/core/qrect.cpp",
-  "src/core/qrectf.cpp",
-  "src/core/qset/qset.cpp",
-  "src/core/qsize.cpp",
-  "src/core/qsizef.cpp",
-  "src/core/qstring.cpp",
-  "src/core/qstringlist.cpp",
-  "src/core/qtime.cpp",
-  "src/core/qtlogging.cpp",
-  "src/core/qtypes.cpp",
-  "src/core/qurl.cpp",
-  "src/core/quuid.cpp",
-  "src/core/qvariant/qvariant.cpp",
-  "src/core/qvector/qvector.cpp",
-  "src/core/qdatetime.cpp",
-  "src/core/qtimezone.cpp",
-  "src/core/qanystringview.cpp",
-  "src/qt_types.cpp",
-]
-
-cpp_gui_files = [
-  "src/gui/qcolor.cpp",
-  "src/gui/qfont.cpp",
-  "src/gui/qgenericmatrix.cpp",
-  "src/gui/qguiapplication.cpp",
-  "src/gui/qimage.cpp",
-  "src/gui/qpainterpath.cpp",
-  "src/gui/qpainter.cpp",
-  "src/gui/qpen.cpp",
-  "src/gui/qpolygon.cpp",
-  "src/gui/qpolygonf.cpp",
-  "src/gui/qquaternion.cpp",
-  "src/gui/qregion.cpp",
-  "src/gui/qvector2d.cpp",
-  "src/gui/qvector3d.cpp",
-  "src/gui/qvector4d.cpp",
-]
-
-
-cpp_qml_files = [
-  "src/qml/qqmlapplicationengine.cpp",
-  "src/qml/qqmlengine.cpp",
-  "src/qml/qqmlimageproviderbase.cpp",
-]
-
 def cxx_qt_lib(*, name, cxx_qt, visibility = []):
-  qt_modules = ["Core", "Network"]
   initializers = {
       "init_cxx_qt_lib_core": "src/core/init.cpp",
       "init_cxx_qt_lib_gui": "src/gui/init.cpp"
@@ -271,10 +207,7 @@ def cxx_qt_lib(*, name, cxx_qt, visibility = []):
 
   extra_headers.append("#define CXX_QT_GUI_FEATURE")
   extra_headers.append("#define CXX_QT_QML_FEATURE")
-
-  # if "quickcontrols" in features or "full" in features:
   extra_headers.append("#define CXX_QT_QUICKCONTROLS_FEATURE")
-  qt_modules.append("QuickControls2")
 
   generate(
     name = name,
@@ -291,6 +224,5 @@ def cxx_qt_lib(*, name, cxx_qt, visibility = []):
     extra_headers = {
       "definitions.h": extra_headers,
     },
-    # qt_modules = qt_modules,
     visibility = visibility,
   )

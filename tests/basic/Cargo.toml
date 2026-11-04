@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-qtbridge = "0.4"
+qtbridge = { version = "0.4" }
 cxx-qt-lib = { version = "*", features = ["full"] }
+cxx-qt = { version = "*" }
 
 [build-dependencies]
 # cxx-qt-build = { version = "0.10" }

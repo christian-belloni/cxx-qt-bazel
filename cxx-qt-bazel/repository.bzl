@@ -48,7 +48,7 @@ alias(
 """
 
 def _qt_stdlib_alias_impl(repo_ctx):
-  targets = ["qmake", "qt_hdrs", "include", "lib", "files", "srcs", "qt"]
+  targets = ["qmake", "qt_hdrs", "include", "lib", "files", "srcs", "qt", "plugins", "qml", "plugin_files", "qml_files"]
   tpl = [ _TPL.format(name = name) for name in targets ]
   tpl = "\n".join(tpl)
   repo_ctx.file("BUILD", content = tpl)

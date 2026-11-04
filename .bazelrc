@@ -3,12 +3,6 @@ common --repo_env=BAZEL_MSVC_RUNTIME_VISUAL_STUDIO_EULA=1 --repo_env=BAZEL_WINDO
 
 common --action_env=CARGO_CFG_qt_version_at_least_6=true
 
-# build:vs2022 --define compiler=vs2022
-# build:vs2022 --copt=-DWIN32_LEAN_AND_MEAN
-# build:vs2022 --copt=-DNOGDI
-# build:vs2022 --copt=-DQT_CORE_LIB
-# build:vs2022 --copt=-DQT_QML_LIB
-# build:vs2022 --copt=-DNOGDI
-# build:vs2022 --cxxopt=/Zc:__cplusplus
-# build:vs2022 --cxxopt=/std:c++20 --cxxopt=/clang:-fms-extensions --cxxopt=/clang:-fms-compatibility 
-# build:vs2022 --cxxopt=/clang:-fdeclspec
+common:windows_x86 --platforms=@rules_rs//rs/platforms:x86_64-pc-windows-gnullvm
+common:windows_x86 --@rules_rust//rust/settings:experimental_use_cc_common_link=True
+# common:windows_x86 --copt=-DQT_NO_DEBUG

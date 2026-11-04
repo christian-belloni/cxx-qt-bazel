@@ -3,18 +3,23 @@ import QtQuick.Controls
 import QtQuick.Window
 import basic
 
-import ui
-
 ApplicationWindow {
     id: root
-    height: 480
     title: qsTr("Hello World")
     visible: true
+    height: 480
     width: 640
 
-    Button {
-        anchors.centerIn: parent
-        text: "Hello World!"
-        onClicked: Backend.say_hello()
+    Image {
+        source: "qrc:/logo.png"
+        height: 480
+        width: 640
     }
+
+    Button {
+      anchors.centerIn: parent
+      text: "Hello World!"
+      onClicked: Backend.say_hello() 
+    }
+
 }

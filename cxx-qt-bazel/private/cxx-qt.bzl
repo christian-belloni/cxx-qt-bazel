@@ -9,7 +9,7 @@ def cxx_qt(*, name, visibility = []):
     crate_include_files = native.glob(["include/**"], allow_empty = True),
     cargo_toml = "Cargo.toml",
     bridge_files = ["src/connection.rs", "src/qobject.rs"],
-    cpp_files = ["src/connection.cpp"],
+    cpp_files = native.glob(["src/**/*.cpp"], allow_empty = True),
     initializers = {
       "init_cxx_qt_core": "src/init.cpp"
     },

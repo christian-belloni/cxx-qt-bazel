@@ -39,7 +39,22 @@ native_binary(
   visibility = ["//visibility:public"]
 )
 
-exports_files(["lib", "include"])
+filegroup(
+  name = "plugin_files",
+  srcs = glob(["plugins/**/*"]),
+  visibility = ["//visibility:public"],
+)
+
+filegroup(
+  name = "qml_files",
+  srcs = glob(["qml/**/*"]),
+  visibility = ["//visibility:public"],
+)
+
+exports_files(
+  ["qml", "plugins", "lib"],
+  visibility = ["//visibility:public"],
+)
 
 cc_library(
   name = "qt_hdrs",
@@ -78,31 +93,32 @@ cc_library(
 
 LIB_TEMPLATE = """
 cc_library(
-    name = "{framework}",
-    hdrs = glob(["lib/{framework}.framework/Headers/**"], allow_empty = True),
-    includes = [
-        "include",
-        "lib/{framework}.framework/Headers",
-        "lib/{framework}.framework/Headers/6.12.0",
-        "lib/{framework}.framework/Headers/6.12.0/{framework}",
-    ],
-    defines = select({{
-        "@platforms//cpu:aarch64": ["__yield=__builtin_arm_yield"],
-        "//conditions:default": [],
-    }}),
-    additional_linker_inputs = [":lib"],
-    linkopts = ["-F $(location :lib)"] + [
-        "-framework {framework}",
-        "-rpath $(rootpath :lib)",
-    ],
-    include_prefix = "{framework}",
-    strip_include_prefix = "lib/{framework}.framework/Headers",
-    target_compatible_with = ["@platforms//os:osx"],
-    visibility = ["//visibility:public"],
-    data = [
-      "lib/{framework}.framework/{framework}",
-      "lib/{framework}.framework/Versions/A/{framework}",
-    ]
+  name = "{framework}",
+  hdrs = glob(["lib/{framework}.framework/Headers/**"], allow_empty = True),
+  includes = [
+   "include",
+   "lib/{framework}.framework/Headers",
+   "lib/{framework}.framework/Headers/6.12.0",
+   "lib/{framework}.framework/Headers/6.12.0/{framework}",
+  ],
+  defines = select({{
+    "@platforms//cpu:aarch64": ["__yield=__builtin_arm_yield"],
+    "//conditions:default": [],
+  }}),
+  additional_linker_inputs = [":lib"],
+  linkopts = ["-F $(location :lib)"] + [
+    "-framework {framework}",
+    "-rpath $(rootpath :lib)",
+  ],
+  include_prefix = "{framework}",
+  strip_include_prefix = "lib/{framework}.framework/Headers",
+  target_compatible_with = ["@platforms//os:osx"],
+  visibility = ["//visibility:public"],
+  data = [
+    "lib/{framework}.framework/{framework}",
+    "lib/{framework}.framework/Versions/A/{framework}",
+  ],
+  deps = [":qt_hdrs"]
 )
 """
 
@@ -139,10 +155,6 @@ def _qt_download_osx_impl(repo_ctx):
     url = BASE_URL + "/qt6_6120/qt6_6120/qt.qt6.6120.clang_64/6.12.0-0-202609280346qttools-MacOS-MacOS_26-Clang-MacOS-MacOS_26-X86_64-ARM64.7z"
   )
 
-  # repo_ctx.download_and_extract(
-  #   url = "https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2588.84cdeaaa/CQtDeployer_1.6.2588.84cdeaaa_Darwin_arm64.zip",
-  # )
-
   for binary in repo_ctx.path("bin").readdir():
     repo_ctx.execute(["chmod", "+x", "%s" % binary])
   
@@ -163,10 +175,6 @@ def _qt_download_osx_impl(repo_ctx):
     repo_ctx.symlink("lib/%s/Versions/A/Headers" % framework, "lib/%s/Headers" % framework)
     repo_ctx.symlink("lib/%s/Versions/A/Resources" % framework, "lib/%s/Resources" % framework)
     repo_ctx.symlink("lib/%s/Versions/A/%s" % (framework, framework_name), "lib/%s/%s" % (framework, framework_name))
-    repo_ctx.symlink(
-      "lib/{framework}.framework/Resources/{framework}.prl".format(framework = framework_name), 
-      "lib/{framework}.prl".format(framework = framework_name.replace("Qt", "Qt6"))
-    )
 
 
 

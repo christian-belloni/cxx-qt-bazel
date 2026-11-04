@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "tests/basic", "tools/qmake"]
+members = [".", "tests/basic"]
 resolver = "3"
 
 [package]

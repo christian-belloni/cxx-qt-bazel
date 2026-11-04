@@ -188,7 +188,8 @@
     "https://bcr.bazel.build/modules/rules_license/1.0.0/source.json": "a52c89e54cc311196e478f8382df91c15f7a2bfdf4c6cd0e2675cc2ff0b56efb",
     "https://bcr.bazel.build/modules/rules_pkg/0.7.0/MODULE.bazel": "df99f03fc7934a4737122518bb87e667e62d780b610910f0447665a7e2be62dc",
     "https://bcr.bazel.build/modules/rules_pkg/1.0.1/MODULE.bazel": "5b1df97dbc29623bccdf2b0dcd0f5cb08e2f2c9050aab1092fd39a41e82686ff",
-    "https://bcr.bazel.build/modules/rules_pkg/1.0.1/source.json": "bd82e5d7b9ce2d31e380dd9f50c111d678c3bdaca190cb76b0e1c71b05e1ba8a",
+    "https://bcr.bazel.build/modules/rules_pkg/1.3.0/MODULE.bazel": "ae0bdefbacc990c91f843206c90cf0f4be620639a5bf22119043599ba86d51a3",
+    "https://bcr.bazel.build/modules/rules_pkg/1.3.0/source.json": "58ae84c545141762f7c434c0ce78bfb55ef0be08d84863e7f0503fff135fe4e2",
     "https://bcr.bazel.build/modules/rules_proto/4.0.0/MODULE.bazel": "a7a7b6ce9bee418c1a760b3d84f83a299ad6952f9903c67f19e4edd964894e06",
     "https://bcr.bazel.build/modules/rules_proto/5.3.0-21.7/MODULE.bazel": "e8dff86b0971688790ae75528fe1813f71809b5afd57facb44dad9e8eca631b7",
     "https://bcr.bazel.build/modules/rules_proto/6.0.0-rc1/MODULE.bazel": "1e5b502e2e1a9e825eef74476a5a1ee524a92297085015a052510b09a1a09483",
@@ -233,8 +234,7 @@
     "https://bcr.bazel.build/modules/swift_argument_parser/1.3.1.2/MODULE.bazel": "75aab2373a4bbe2a1260b9bf2a1ebbdbf872d3bd36f80bff058dccd82e89422f",
     "https://bcr.bazel.build/modules/swift_argument_parser/1.3.1.2/source.json": "5fba48bbe0ba48761f9e9f75f92876cafb5d07c0ce059cc7a8027416de94a05b",
     "https://bcr.bazel.build/modules/tar.bzl/0.10.4/MODULE.bazel": "e8f9ff79199e8d9eaad7f1b0a77ad74b30bb82d794b87d8ca942bead5de83ae9",
-    "https://bcr.bazel.build/modules/tar.bzl/0.10.9/MODULE.bazel": "4636f5f6a7c34d3d0653634ed95a34560426d548c5301c6c5924c885ef737b46",
-    "https://bcr.bazel.build/modules/tar.bzl/0.10.9/source.json": "30a5cf0a8281adce53ab1c5a4291e88b2c161e2df1feb6cba4ee50556f1748d7",
+    "https://bcr.bazel.build/modules/tar.bzl/0.10.4/source.json": "20143442376c03426f6135292ba02d825cb75308aa47e6bf42dd4cc5a435c2ff",
     "https://bcr.bazel.build/modules/upb/0.0.0-20220923-a547704/MODULE.bazel": "7298990c00040a0e2f121f6c32544bab27d4452f80d9ce51349b1a28f3005c43",
     "https://bcr.bazel.build/modules/windows_support/0.4.1/MODULE.bazel": "2287f95ac65c48ea05197f626a9b5711ea3c88cea61f2a5782882bdd55fdeb51",
     "https://bcr.bazel.build/modules/windows_support/0.4.1/source.json": "bdb72e6717b00135e0a4a8512b3f6b626df0baea0bde74bf7312c7484f791287",
@@ -255,7 +255,7 @@
   "moduleExtensions": {
     "//cxx-qt-bazel:extensions.bzl%qt_download": {
       "general": {
-        "bzlTransitiveDigest": "U9gZi0u6DPRYZFFDFasfShRuhKkYHqxRpPVtrEAW1JU=",
+        "bzlTransitiveDigest": "uKqaOW2ORH4sZJCHyTzzcwFLj9pT2AHKZ6lfWDZ8/sA=",
         "usagesDigest": "Cu5iqiLVsEnpOlL4uZymZwY4qrLp7Ctr4bvtgUvQHwY=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
@@ -629,7 +629,7 @@
       "bytes_1.11.1": "{\"dependencies\":[{\"default_features\":false,\"features\":[\"require-cas\"],\"name\":\"extra-platforms\",\"optional\":true,\"package\":\"portable-atomic\",\"req\":\"^1.3\"},{\"kind\":\"dev\",\"name\":\"loom\",\"req\":\"^0.7\",\"target\":\"cfg(loom)\"},{\"default_features\":false,\"features\":[\"alloc\"],\"name\":\"serde\",\"optional\":true,\"req\":\"^1.0.60\"},{\"kind\":\"dev\",\"name\":\"serde_test\",\"req\":\"^1.0\"}],\"features\":{\"default\":[\"std\"],\"std\":[]}}",
       "bytes_1.12.1": "{\"dependencies\":[{\"default_features\":false,\"features\":[\"require-cas\"],\"name\":\"extra-platforms\",\"optional\":true,\"package\":\"portable-atomic\",\"req\":\"^1.3\"},{\"kind\":\"dev\",\"name\":\"loom\",\"req\":\"^0.7\",\"target\":\"cfg(loom)\"},{\"default_features\":false,\"features\":[\"alloc\"],\"name\":\"serde\",\"optional\":true,\"req\":\"^1.0.60\"},{\"kind\":\"dev\",\"name\":\"serde_test\",\"req\":\"^1.0\"}],\"features\":{\"default\":[\"std\"],\"std\":[]}}",
       "camino_1.2.2": "{\"dependencies\":[{\"kind\":\"dev\",\"name\":\"bincode\",\"req\":\"^1\"},{\"name\":\"proptest\",\"optional\":true,\"req\":\"^1.0.0\"},{\"features\":[\"derive\"],\"kind\":\"dev\",\"name\":\"serde\",\"req\":\"^1.0.223\"},{\"kind\":\"dev\",\"name\":\"serde_bytes\",\"req\":\"^0.11.8\"},{\"name\":\"serde_core\",\"optional\":true,\"req\":\"^1\"}],\"features\":{\"proptest1\":[\"dep:proptest\"],\"serde1\":[\"dep:serde_core\"]}}",
-      "cc_1.10.0": "{\"dependencies\":[{\"name\":\"find-msvc-tools\",\"req\":\"^0.1.15\"},{\"default_features\":false,\"name\":\"jobserver\",\"optional\":true,\"req\":\"^0.1.32\"},{\"default_features\":false,\"name\":\"libc\",\"optional\":true,\"req\":\"^0.2.168\",\"target\":\"cfg(unix)\"},{\"name\":\"shlex\",\"req\":\"^2.0.1\"},{\"kind\":\"dev\",\"name\":\"tempfile\",\"req\":\"^3.0.4\"}],\"features\":{\"compile-commands\":[],\"jobserver\":[],\"parallel\":[\"dep:jobserver\",\"dep:libc\"]}}",
+      "cc_1.11.0": "{\"dependencies\":[{\"name\":\"find-msvc-tools\",\"req\":\"^0.1.15\"},{\"default_features\":false,\"name\":\"jobserver\",\"optional\":true,\"req\":\"^0.1.32\"},{\"default_features\":false,\"name\":\"libc\",\"optional\":true,\"req\":\"^0.2.168\",\"target\":\"cfg(unix)\"},{\"name\":\"shlex\",\"req\":\"^2.0.1\"},{\"kind\":\"dev\",\"name\":\"tempfile\",\"req\":\"^3.0.4\"}],\"features\":{\"compile-commands\":[],\"jobserver\":[],\"parallel\":[\"dep:jobserver\",\"dep:libc\"]}}",
       "cc_1.2.62": "{\"dependencies\":[{\"name\":\"find-msvc-tools\",\"req\":\"^0.1.9\"},{\"default_features\":false,\"name\":\"jobserver\",\"optional\":true,\"req\":\"^0.1.30\"},{\"default_features\":false,\"name\":\"libc\",\"optional\":true,\"req\":\"^0.2.62\",\"target\":\"cfg(unix)\"},{\"name\":\"shlex\",\"req\":\"^1.3.0\"},{\"kind\":\"dev\",\"name\":\"tempfile\",\"req\":\"^3\"}],\"features\":{\"jobserver\":[],\"parallel\":[\"dep:libc\",\"dep:jobserver\"]}}",
       "cfg-if_1.0.4": "{\"dependencies\":[{\"name\":\"core\",\"optional\":true,\"package\":\"rustc-std-workspace-core\",\"req\":\"^1.0.0\"}],\"features\":{\"rustc-dep-of-std\":[\"core\"]}}",
       "cfg-if_1.0.5": "{\"dependencies\":[{\"name\":\"core\",\"optional\":true,\"package\":\"rustc-std-workspace-core\",\"req\":\"^1.0.0\"}],\"features\":{\"rustc-dep-of-std\":[\"core\"]}}",

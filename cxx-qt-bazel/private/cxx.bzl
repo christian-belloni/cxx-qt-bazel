@@ -5,5 +5,4 @@ def cxx(*, name, visibility):
     name = name,
     srcs = ["src/cxx.cc", "include/cxx.h"],
     visibility = visibility,
-    linkstatic = True,
   )
