@@ -95,7 +95,8 @@ _qt_localizations = rule(
   implementation = _qt_localizations_impl,
   attrs = {
     "locales": attr.label_list(allow_files = True),
-  }
+  },
+  toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
 
 def qt_localizations(*, name, locales, visibility = []):
