@@ -9,7 +9,7 @@ def _qt_resource_impl(ctx):
 
   ctx.actions.run(
     executable = info.rcc.files_to_run.executable,
-    arguments = [qrc.path, "-g", "cpp", "-o", out_bin.path],
+    arguments = [qrc.path, "--name", ctx.label.name, "-g", "cpp", "-o", out_bin.path],
     outputs = [out_bin],
     inputs = ctx.files.res
   )
@@ -85,7 +85,7 @@ def _qt_localizations_impl(ctx):
   ctx.actions.run(
     executable = rcc,
     inputs = [qrc] + qms,
-    arguments = [qrc.path, "-g", "cpp", "-o", out_bin.path],
+    arguments = [qrc.path, "--name", ctx.label.name, "-g", "cpp", "-o", out_bin.path],
     outputs = [out_bin]
   )
 
