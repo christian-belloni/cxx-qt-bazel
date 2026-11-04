@@ -1,5 +1,5 @@
 QtToolchainInfo = provider(
-  fields = ["qmake", "rcc", "cxxqtbuild"]
+  fields = ["qmake", "rcc", "cxxqtbuild", "lconvert"]
 )
 
 def _qt_toolchain_impl(ctx):
@@ -7,7 +7,8 @@ def _qt_toolchain_impl(ctx):
     qtinfo = QtToolchainInfo(
       qmake = ctx.attr.qmake[DefaultInfo],
       rcc = ctx.attr.rcc[DefaultInfo],
-      cxxqtbuild = ctx.attr._cxxqtbuild[DefaultInfo],
+      lconvert = ctx.attr.lconvert[DefaultInfo],
+      cxxqtbuild = ctx.attr.cxxqtbuild[DefaultInfo],
     )
   )
 
@@ -16,6 +17,7 @@ qt_toolchain = rule(
   attrs = {
     "qmake": attr.label(executable = True, mandatory = True, cfg = "exec"),
     "rcc": attr.label(executable = True, mandatory = True, cfg = "exec"),
-    "_cxxqtbuild": attr.label(executable = True, default = "@cxx-qt-bazel//:cxxqtcmd", cfg = "exec")
+    "lconvert": attr.label(executable = True, mandatory = True, cfg = "exec"),
+    "cxxqtbuild": attr.label(executable = True, default = "@cxx-qt-bazel//:cxxqtcmd", cfg = "exec")
   }
 )

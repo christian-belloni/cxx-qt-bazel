@@ -39,6 +39,14 @@ native_binary(
   visibility = ["//visibility:public"]
 )
 
+native_binary(
+  name = "lconvert",
+  src = "libexec/lrelease",
+  # data = glob(["**"]),
+  out = "lconvert",
+  visibility = ["//visibility:public"]
+)
+
 filegroup(
   name = "plugin_files",
   srcs = glob(["plugins/**/*"]),
