@@ -5,11 +5,22 @@ def _qt_resource_impl(ctx):
 
 
   qrc = [ file for file in ctx.files.res if str(file.path).endswith(".qrc") ][0]
-  out_bin = ctx.actions.declare_file("%s.cpp" % ctx.attr.name)
-  
-  ctx.actions.run(
-    executable = info.rcc.files_to_run.executable,
-    arguments = [
+  args = []
+  if ctx.attr.binary:
+    out_bin = ctx.actions.declare_file("%s.rcc" % ctx.attr.name)
+    args = [
+      qrc.path, 
+      "--name", 
+      ctx.label.name, 
+      "--root", 
+      "/qt/qml/" + ctx.attr.module_name, 
+      "--binary",
+      "-o", 
+      out_bin.path
+    ]
+  else:
+    out_bin = ctx.actions.declare_file("%s.cpp" % ctx.attr.name)
+    args = [
       qrc.path, 
       "--name", 
       ctx.label.name, 
@@ -17,11 +28,14 @@ def _qt_resource_impl(ctx):
       "/qt/qml/" + ctx.attr.module_name, 
       "-g", 
       "cpp", 
-      "-compress",
-      "10",
       "-o", 
       out_bin.path
-    ],
+    ]
+  
+
+  ctx.actions.run(
+    executable = info.rcc.files_to_run.executable,
+    arguments = args,
     outputs = [out_bin],
     inputs = ctx.files.res
   )
@@ -33,6 +47,7 @@ _qt_resource = rule(
   attrs = {
     "res": attr.label_list(allow_files = True),
     "module_name": attr.string(mandatory = True),
+    "binary": attr.bool(default = False)
   },
   toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
@@ -54,6 +69,13 @@ def qt_resource(*, name, module_name, res, visibility = []):
     linkstatic = True,
   )
 
+def qt_binary_resource(*, name, module_name, res, visibility = []):
+  _qt_resource(
+    name = name,
+    res = res,
+    module_name = module_name,
+    binary = True,
+  )
 
 _QRC_TPL = """
 <RCC>
