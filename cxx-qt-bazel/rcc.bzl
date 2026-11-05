@@ -3,10 +3,10 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 def _qt_resource_impl(ctx):
   info = ctx.toolchains["@cxx-qt-bazel//toolchains:toolchain_type"].qtinfo
 
-  out_bin = ctx.actions.declare_file("%s.cpp" % ctx.attr.name)
 
   qrc = [ file for file in ctx.files.res if str(file.path).endswith(".qrc") ][0]
-
+  out_bin = ctx.actions.declare_file("%s.cpp" % ctx.attr.name)
+  
   ctx.actions.run(
     executable = info.rcc.files_to_run.executable,
     arguments = [qrc.path, "--name", ctx.label.name, "--root", "/qt/qml/" + ctx.attr.module_name, "-g", "cpp", "-o", out_bin.path],
@@ -39,6 +39,7 @@ def qt_resource(*, name, module_name, res, visibility = []):
     visibility = visibility,
     # alwayslink required for registration in res system
     alwayslink = True,
+    linkstatic = True,
   )
 
 
@@ -116,4 +117,5 @@ def qt_localizations(*, name, locales, module_name, visibility = []):
     visibility = visibility,
     # alwayslink required for registration in res system
     alwayslink = True,
+    linkstatic = True,
   )

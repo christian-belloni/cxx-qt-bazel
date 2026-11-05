@@ -154,6 +154,12 @@ echo '''--- src/cpp/dynamicmetaobjectbuilder.cpp	2026-11-03 12:01:45
 echo "Project generation successfull, add:\n"
 echo "  include(\\"//third_party:include.MODULE.bazel\\")\n"
 echo "to your MODULE.bazel"
+
+echo "Until some changes are upstreamed, add this patch section to the workspace's Cargo.toml"
+echo '[patch.crates-io]'
+echo 'cxx-qt-build = { git = "https://github.com/christian-belloni/cxx-qt.git" }'
+echo 'cxx-qt-gen = { git = "https://github.com/christian-belloni/cxx-qt.git" }'
+echo 'qt-build-utils = { git = "https://github.com/christian-belloni/cxx-qt.git" }'
 """
 
 

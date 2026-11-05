@@ -10,16 +10,28 @@ ApplicationWindow {
     height: 480
     width: 640
 
+
     Image {
-        source: "qrc:/logo.png"
+        source: "qrc:/qt/qml/Images/logo.png"
         height: 480
         width: 640
     }
 
-    Button {
-      anchors.centerIn: parent
-      text: "Hello World!"
-      onClicked: Backend.say_hello() 
+    StackView {
+      anchors.fill: parent
+
+      Text {
+        text: Backend.counter
+      }
+
+      Button {
+        anchors.centerIn: parent
+        text: "Hello World!" + Backend.inner.msg
+        onClicked: Backend.say_hello() 
+      }
     }
 
+    Component.onCompleted: {
+      Backend.register();
+    }
 }
