@@ -10,8 +10,6 @@ def _qt_resource_impl(ctx):
     out_bin = ctx.actions.declare_file("%s.rcc" % ctx.attr.name)
     args = [
       qrc.path, 
-      "--name", 
-      ctx.label.name, 
       "--root", 
       "/qt/qml/" + ctx.attr.module_name, 
       "--binary",
