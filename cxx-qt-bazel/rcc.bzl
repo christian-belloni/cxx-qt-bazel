@@ -122,8 +122,7 @@ def _qt_localizations_impl(ctx):
     inputs = [qrc] + qms,
     arguments = [
       qrc.path, 
-      "--name", 
-      ctx.label.name, "--root", 
+      "--root", 
       "/qt/qml/" + ctx.attr.module_name, 
       "-g", 
       "cpp", 
