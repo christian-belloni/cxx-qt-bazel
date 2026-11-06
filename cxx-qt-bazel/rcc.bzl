@@ -5,7 +5,6 @@ def _qt_resource_impl(ctx):
 
 
   qrc = [ file for file in ctx.files.res if str(file.path).endswith(".qrc") ][0]
-  args = []
   if ctx.attr.binary:
     out_bin = ctx.actions.declare_file("%s.rcc" % ctx.attr.name)
     args = [
@@ -33,7 +32,7 @@ def _qt_resource_impl(ctx):
 
   ctx.actions.run(
     executable = info.rcc.files_to_run.executable,
-    arguments = args,
+    arguments = args + ctx.attr.rcc_args,
     outputs = [out_bin],
     inputs = ctx.files.res
   )
@@ -45,16 +44,18 @@ _qt_resource = rule(
   attrs = {
     "res": attr.label_list(allow_files = True),
     "module_name": attr.string(mandatory = True),
-    "binary": attr.bool(default = False)
+    "binary": attr.bool(default = False),
+    "rcc_args": attr.string_list(default = []),
   },
   toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
 
-def qt_resource(*, name, module_name, res, visibility = []):
+def qt_resource(*, name, module_name, res, rcc_args = [], visibility = []):
   _qt_resource(
     name = "_%s" % name,
     res = res,
-    module_name = module_name
+    module_name = module_name,
+    rcc_args = rcc_args,
   )
 
   cc_library(
@@ -67,12 +68,14 @@ def qt_resource(*, name, module_name, res, visibility = []):
     linkstatic = True,
   )
 
-def qt_binary_resource(*, name, module_name, res, visibility = []):
+def qt_binary_resource(*, name, module_name, res, rcc_args = [], visibility = []):
   _qt_resource(
     name = name,
     res = res,
     module_name = module_name,
     binary = True,
+    visibility = visibility,
+    rcc_args = rcc_args,
   )
 
 _QRC_TPL = """
@@ -126,11 +129,9 @@ def _qt_localizations_impl(ctx):
       "/qt/qml/" + ctx.attr.module_name, 
       "-g", 
       "cpp", 
-      "-compress",
-      "10",
       "-o", 
       out_bin.path
-    ],
+    ] + ctx.attr.rcc_args,
     outputs = [out_bin]
   )
 
@@ -141,15 +142,17 @@ _qt_localizations = rule(
   attrs = {
     "module_name": attr.string(mandatory = True),
     "locales": attr.label_list(allow_files = True),
+    "rcc_args": attr.string_list(default = []),
   },
   toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
 )
 
-def qt_localizations(*, name, locales, module_name, visibility = []):
+def qt_localizations(*, name, locales, module_name, rcc_args = [], visibility = []):
   _qt_localizations(
     name = "_%s" % name,
     locales = locales,
-    module_name = module_name
+    module_name = module_name,
+    rcc_args = rcc_args,
   )
 
   cc_library(
