@@ -106,7 +106,8 @@ def _qt_localizations_impl(ctx):
       arguments = [
         l.path,
         "-qm",
-        qm.path
+        qm.path,
+        "-fail-on-invalid",
       ]
     )
 
