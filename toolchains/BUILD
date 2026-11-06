@@ -10,6 +10,7 @@ qt_toolchain(
   name = "osx_qt_osx",
   qmake= "@qt_osx//:qmake",
   rcc = "@qt_osx//:rcc",
+  moc = "@qt_osx//:moc",
   lconvert = "@qt_osx//:lconvert",
 )
 
@@ -17,6 +18,7 @@ qt_toolchain(
   name = "osx_qt_win_x86",
   qmake= "@qt_osx//:qmake",
   rcc = "@qt_osx//:rcc",
+  moc = "@qt_osx//:moc",
   lconvert = "@qt_osx//:lconvert",
 )
 
