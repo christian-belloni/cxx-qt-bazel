@@ -348,18 +348,32 @@ exports_files(
 
 def _qt_download_win_x86_impl(repo_ctx):
 
+  # qtbase
   repo_ctx.download_and_extract(
     url = "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6120/qt6_6120_llvm_mingw/qt.qt6.6120.win64_llvm_mingw/6.12.0-0-202609280346qtbase-Windows-Windows_11_24H2-Clang-Windows-Windows_11_24H2-X86_64.7z",
   )
 
+  #qtdecl
   repo_ctx.download_and_extract(
     url = "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6120/qt6_6120_llvm_mingw/qt.qt6.6120.win64_llvm_mingw/6.12.0-0-202609280346qtdeclarative-Windows-Windows_11_24H2-Clang-Windows-Windows_11_24H2-X86_64.7z",
   )
-
+  
+  #qttools
   repo_ctx.download_and_extract(
     url = "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6120/qt6_6120_llvm_mingw/qt.qt6.6120.win64_llvm_mingw/6.12.0-0-202609280346qttools-Windows-Windows_11_24H2-Clang-Windows-Windows_11_24H2-X86_64.7z",
   )
 
+  #qtsvg
+  repo_ctx.download_and_extract(
+    url = "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6120/qt6_6120_llvm_mingw/qt.qt6.6120.win64_llvm_mingw/6.12.0-0-202609280346qtsvg-Windows-Windows_11_24H2-Clang-Windows-Windows_11_24H2-X86_64.7z",
+  )
+
+  #qtcompat
+  repo_ctx.download_and_extract(
+    url = "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6120/qt6_6120_llvm_mingw/qt.qt6.6120.addons.qt5compat.win64_llvm_mingw/6.12.0-0-202609280346qt5compat-Windows-Windows_11_24H2-Clang-Windows-Windows_11_24H2-X86_64.7z",
+  )
+  
+  #runtime
   repo_ctx.download_and_extract(
     url = "https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6120/qt6_6120_llvm_mingw/qt.qt6.6120.win64_llvm_mingw/6.12.0-0-202609280346llvm-mingw-20260602-ucrt-x86_64-runtime.zip"
   )
