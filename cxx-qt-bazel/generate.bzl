@@ -225,7 +225,7 @@ def cxx_qt_cmd(*, name, visibility = [], cc_deps = [], **kwargs):
     visibility = visibility,
     includes = [
       "%s-gen/out/cxxqtbuild/include" % name,
-      "%s-gen/out/cxxqtbuild/include/src" % name,
+      "%s-gen/out/cxxqtbuild/include/%s/src" % (name, kwargs["crate_name"]),
       "%s-gen/out/include" % name,
       "%s-gen/out/moc" % name,
     ],
