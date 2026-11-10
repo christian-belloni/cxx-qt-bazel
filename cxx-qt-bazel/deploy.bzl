@@ -8,17 +8,24 @@ load("@rules_pkg//pkg:mappings.bzl", "strip_prefix")
 # Vendored from bazel_lib
 def _transition_platform_impl(settings, attr):
   use_common = settings.get("@rules_rust//rust/settings:experimental_use_cc_common_link", False)
+  features = settings.get("//command_line_option:features", [])
   if "windows" in str(attr._target_platform):
     use_common = True
+    features += ["generate_pdf_file"]
   return {
     "//command_line_option:platforms": str(attr._target_platform),
+    "//command_line_option:features": features,
     "@rules_rust//rust/settings:experimental_use_cc_common_link": use_common
   }
 
 _transition_platform = transition(
     implementation = _transition_platform_impl,
     inputs = [],
-    outputs = ["//command_line_option:platforms", "@rules_rust//rust/settings:experimental_use_cc_common_link"],
+    outputs = [
+      "//command_line_option:platforms", 
+      "//command_line_option:features",
+      "@rules_rust//rust/settings:experimental_use_cc_common_link"
+    ],
 )
 
 def _common_copy_plugins_qml(ctx):
@@ -44,7 +51,7 @@ def _deploy_win_impl(ctx):
   binary_outs = []
   exe_path = [ file.dirname for file in ctx.files.binary if ".exe" in file.path ][0]
   for file in ctx.files.binary:
-    if ".exe" not in file.path and "libc++" not in file.path and "unwind" not in file.path:
+    if ".exe" not in file.path and "libc++" not in file.path and "unwind" not in file.path and ".pdb" not in file.path:
       continue
     out_path = file.path.removeprefix(exe_path)
     out = ctx.actions.declare_file("%s%s" % (ctx.label.name, out_path))

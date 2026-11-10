@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc, time::Duration};
 
-use qtbridge::{QApp, QmlObject, qobject, qproperty};
+use qtbridge::{QApp, QmlObject, qobject};
 
 #[derive(Default)]
 pub struct Backend {
@@ -11,11 +11,23 @@ pub struct Backend {
 #[derive(Default)]
 pub struct NestedObject {
     msg: String,
+    inner: Rc<RefCell<OtherNestedObject>>,
 }
 
-#[qobject(Singleton)]
+#[derive(Default)]
+pub struct OtherNestedObject {
+    msg: String,
+}
+
+#[qobject]
 impl NestedObject {
-    qproperty!("msg", Member = msg);
+    qproperty!("msg", Member = msg, Constant);
+    qproperty!("inner", Member = inner, Constant);
+}
+
+#[qobject]
+impl OtherNestedObject {
+    qproperty!("msg", Member = msg, Constant);
 }
 
 #[qobject(Singleton)]
@@ -27,7 +39,7 @@ impl Backend {
         Notify = counter_changed
     );
 
-    qproperty!("inner", Member = inner);
+    qproperty!("inner", Member = inner, Notify = inner_changed);
 
     #[qslot]
     fn say_hello(&self) {
@@ -41,6 +53,9 @@ impl Backend {
 
     #[qsignal]
     fn counter_changed(&mut self);
+
+    #[qsignal]
+    fn inner_changed(&mut self);
 
     #[qslot]
     fn register(&mut self) {

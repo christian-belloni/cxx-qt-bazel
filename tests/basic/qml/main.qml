@@ -26,7 +26,7 @@ ApplicationWindow {
 
       Button {
         anchors.centerIn: parent
-        text: "Hello World!" + Backend.inner.msg
+        text: "Hello World!" + Backend.inner.inner.msg
         onClicked: Backend.say_hello() 
       }
     }

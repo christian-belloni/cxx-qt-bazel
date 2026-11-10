@@ -22,13 +22,6 @@ qml_module(
   visibility = ["//visibility:public"]
 )
 
-cc_library(
-  name = "_ntdll",
-  linkopts = [
-    "ntdll.lib",
-  ]
-)
-
 default_rustc_flags = [
   "--cfg", "cxxqt_qt_version_major=\"6\"",
   "--cfg", "cxxqt_qt_version_minor=\"11\"",
