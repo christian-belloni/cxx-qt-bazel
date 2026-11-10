@@ -28,6 +28,8 @@ impl NestedObject {
 #[qobject]
 impl OtherNestedObject {
     qproperty!("msg", Member = msg, Constant);
+    #[qsignal]
+    fn my_signal(&mut self);
 }
 
 #[qobject(Singleton)]
