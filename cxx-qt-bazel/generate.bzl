@@ -52,13 +52,18 @@ def _copy_include_files(ctx):
     include_headers += out
   return include_headers
 
-def _generate_sources(*, ctx, args, include_prefix, toml_dir):
+def _generate_sources(*, ctx, args, bridge_files, include_prefix, toml_dir):
   generated_headers = []
   generated_cpps = []
 
-  for bridge in ctx.files.bridge_files:
-    args.add("--file", bridge)
-    relative_path = bridge.path.removeprefix("%s/" % toml_dir)
+  for bridge in bridge_files:
+    if type(bridge) == "string":
+      args.add("--file", "%s/%s" % (toml_dir, bridge))
+      relative_path = bridge
+    else:
+      args.add("--file", bridge)
+      relative_path = bridge.path.removeprefix("%s/" % toml_dir)
+
     new_header = _out_path(ctx, "cxxqtbuild/include/%s/%s" % (include_prefix, relative_path.replace(".rs", ".cxx.h")))
     new_cxxqt_header = _out_path(ctx, "cxxqtbuild/include/%s/%s" % (include_prefix, relative_path.replace(".rs", ".cxxqt.h")))
     generated_headers.append(new_header)
@@ -69,14 +74,11 @@ def _generate_sources(*, ctx, args, include_prefix, toml_dir):
     generated_cpps.append(new_cpp_qt)
   return (generated_headers, generated_cpps)
 
-def _generate_qml_module(ctx, args):
+def _generate_qml_module(ctx, args, include_prefix, toml_dir):
   moc_files = []
-  if len(ctx.attr.qml_modules) != 0 and ctx.attr.include_builtins:
-    moc_builtins = _out_path(ctx, "moc/moc_builtins.h.cpp")
-    builtins = _out_path(ctx, "builtins.h")
-    moc_files += [builtins, moc_builtins]
-
   moc_plugin_headers = []
+  bridge_files = []
+
   for module_name, qml_files in ctx.attr.qml_modules.items():
     args.add("--new-qml-module", module_name)
     public = _out_path(ctx,
@@ -90,14 +92,28 @@ def _generate_qml_module(ctx, args):
     moc_plugin = _out_path(ctx, "moc/moc_%s_plugin.cpp.cpp" % module_name.replace(".", "_"))
     typeregister = _out_path(ctx, "qmltyperegistrar/%s_qmltyperegistration.cpp" % module_name.replace(".", "_"))
 
+    
     cachegen = _out_path(ctx, "qmlcachegen/%s/qmlcache_loader.cpp" % module_name.replace(".", "/"))
     moc_files += [public, call, mod, res, typeregister, cachegen]
     moc_plugin_headers.append(moc_plugin)
     for f in qml_files:
-      args.add("--qml-file", f)
-      qml = _out_path(ctx, "qmlcachegen/%s/%s.cpp" % (module_name.replace(".", "/"), f.split("/").pop()))
-      moc_files.append(qml)
-  return (moc_files, moc_plugin_headers)
+      if f.endswith("qml"):
+        args.add("--qml-file", f)
+        qml = _out_path(ctx, "qmlcachegen/%s/%s.cpp" % (module_name.replace(".", "/"), f.split("/").pop()))
+        moc_files.append(qml)
+      elif f.endswith("rs"):
+        bridge_files.append(f)
+        moc_files.append(_out_path(ctx, "moc/moc_%s.cxxqt.h.cpp" % f.split("/").pop().replace(".rs", "")))
+      
+  sources, hdrs = _generate_sources(
+    ctx = ctx,
+    args = args,
+    include_prefix = include_prefix,
+    bridge_files = bridge_files,
+    toml_dir = toml_dir
+  )
+
+  return (moc_files + sources + hdrs, moc_plugin_headers)
 
 def _generate_extra_headers(ctx, args):
   extra_headers = []
@@ -128,6 +144,7 @@ def _cxx_qt_cmd_impl(ctx):
     ctx = ctx,
     args = args,
     include_prefix = include_prefix,
+    bridge_files = ctx.files.bridge_files,
     toml_dir = toml_dir
   )
 
@@ -137,7 +154,7 @@ def _cxx_qt_cmd_impl(ctx):
   
   public_initializer, initializer = _generate_initializers(ctx, args)
 
-  (moc_files, moc_plugin_headers) = _generate_qml_module(ctx, args)
+  (moc_files, moc_plugin_headers) = _generate_qml_module(ctx, args, include_prefix, toml_dir)
 
   args.add("generate")
 
@@ -212,7 +229,7 @@ _extract_plugin_headers = rule(
   }
 )
 
-def cxx_qt_cmd(*, name, visibility = [], cc_deps = [], **kwargs):
+def cxx_qt_cmd(*, name, visibility = [], cc_deps = [], additional_includes = [], **kwargs):
   _cxx_qt_cmd(name = name + "-gen", visibility = visibility, **kwargs)
   _extract_plugin_headers(
     name = "_plugin_headers_%s" % name,
@@ -225,14 +242,117 @@ def cxx_qt_cmd(*, name, visibility = [], cc_deps = [], **kwargs):
     visibility = visibility,
     includes = [
       "%s-gen/out/cxxqtbuild/include" % name,
-      "%s-gen/out/cxxqtbuild/include/%s/src" % (name, kwargs["crate_name"]),
       "%s-gen/out/include" % name,
       "%s-gen/out/moc" % name,
+    ] + additional_includes,
+    defines = [
+      "QT_STATICPLUGIN",
+    ],
+    deps = [ "@qt//:qt", "@cxx-qt-bazel//cxx-qt-bazel/private:builtins" ] + [ "%s" % dep for dep in cc_deps ],
+    alwayslink = True,
+    linkstatic = True,
+  )
+
+def _generate_cxxqt_impl(ctx):
+  args = ctx.actions.args()
+  toml_dir, cxx_header, include_prefix, info = _common_args(ctx, args)
+
+  generated_headers, generated_cpps = _generate_sources(
+    ctx = ctx,
+    args = args,
+    include_prefix = include_prefix,
+    toml_dir = toml_dir,
+    bridge_files = ctx.files.bridge_files
+  )
+
+  args.add("--new-qml-module", ctx.attr.module_name)
+  outputs = [
+    cxx_header,
+    _out_path(ctx, "qmltyperegistrar/%s_qmltyperegistration.cpp" % ctx.attr.module_name),
+    _out_path(ctx, "moc/moc_%s_plugin.cpp.cpp" % ctx.attr.module_name.replace(".", "_")),
+    _out_path(ctx, "qt-build-utils/qml_plugin/%s_plugin.cpp" % ctx.attr.module_name.replace(".", "_")),
+    _out_path(ctx, "rcc/qml_module_resources_%s.cpp" % ctx.attr.module_name.replace(".", "_"))
+  ] + generated_headers + generated_cpps
+  
+  for bridge in ctx.files.bridge_files:
+    args.add("--file", bridge)
+    outputs.append(_out_path(ctx, "moc/moc_%s.cxxqt.h.cpp" % bridge.basename.replace(".rs", "")))
+
+  args.add("generate")
+  ctx.actions.run(
+    outputs = outputs,
+    inputs = ctx.files.srcs + ctx.attr._qt_files[DirectoryInfo].transitive_files.to_list(),
+    executable = info.cxxqtbuild.files_to_run.executable,
+    arguments = [args],
+    mnemonic = "CxxQtGenerate",
+    tools = [info.qmake.files_to_run],
+    env = {
+      "CARGO_CFG_cxxqt_qt_version_major": "6",
+      "CARGO_CFG_cxxqt_qt_version_minor": "12",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_1": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_2": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_3": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_4": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_5": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_6": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_7": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_8": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_9": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_10": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_11": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6_12": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_5": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_6": "1",
+      "CARGO_CFG_cxxqt_qt_version_at_least_7": "1",
+    }
+  )
+
+  providers = [DefaultInfo(files = depset([out for out in outputs if not out.path.endswith(".cpp.cpp")])), CxxQtQmlPlugin(plugin_headers = depset([out for out in outputs if out.path.endswith(".cpp.cpp")]))]
+  return providers
+
+
+_generate_cxxqt = rule(
+  implementation = _generate_cxxqt_impl,
+  attrs = {
+    "srcs": attr.label_list(allow_files = True),
+    "bridge_files": attr.label_list(allow_files = True),
+    "cargo_toml": attr.label(allow_single_file = True, mandatory = True),
+    "module_name": attr.string(mandatory = True),
+    "crate_name": attr.string(mandatory = True),
+    "crate_include_root": attr.string(),
+    "include_prefix": attr.string(),
+    "_qt_files": attr.label(providers = [DirectoryInfo], default = Label("@qt//:files")),
+  },
+  toolchains = ["@cxx-qt-bazel//toolchains:toolchain_type"]
+)
+
+def generate_cxxqt(*, name, visibility = [], cc_deps = [], **kwargs):
+  _generate_cxxqt(
+    name = name + "-gen",
+    **kwargs
+  )
+  
+  _extract_plugin_headers(
+    name = "_plugin_headers_%s" % name,
+    cxx_qt_cmd = name + "-gen",
+  )
+
+  cc_library(
+    name = name,
+    srcs = [name + "-gen"],
+    hdrs = ["_plugin_headers_%s" % name],
+    visibility = visibility,
+    deps = ["@qt", "@cxx-qt-bazel//cxx-qt-bazel/private:builtins"] + cc_deps,
+    strip_include_prefix = "%s-gen/out" % name,
+    includes = [
+      "%s-gen/out/cxxqtbuild/include" % name,
+      "%s-gen/out/include" % name,
+      "%s-gen/out/moc" % name,
+      "%s-gen/out/cxxqtbuild/include/private/src" % name,
     ],
     defines = [
       "QT_STATICPLUGIN",
     ],
-    deps = [ "@qt//:qt" ] + [ "%s" % dep for dep in cc_deps ],
     alwayslink = True,
     linkstatic = True,
   )

@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
-import basic
+
+import com.ui.components 1.0
 
 ApplicationWindow {
     id: root
@@ -10,28 +11,22 @@ ApplicationWindow {
     height: 480
     width: 640
 
-
-    Image {
-        source: "qrc:/qt/qml/Images/logo.png"
-        height: 480
-        width: 640
-    }
+    // Image {
+    //     source: "qrc:/qt/qml/Images/logo.png"
+    //     height: 480
+    //     width: 640
+    // }
 
     StackView {
       anchors.fill: parent
 
-      Text {
-        text: Backend.counter
-      }
 
       Button {
         anchors.centerIn: parent
-        text: "Hello World!" + Backend.inner.inner.msg
-        onClicked: Backend.say_hello() 
+        text: "Hello World!" + RustSingleton.persistentValue
+        onClicked: RustSingleton.increment() 
       }
     }
 
-    Component.onCompleted: {
-      Backend.register();
-    }
+    Component.onCompleted: {}
 }

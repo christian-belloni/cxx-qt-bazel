@@ -6,20 +6,9 @@ def qml_module(
   name, 
   crate_name, 
   modules, 
+  cc_deps = [],
   visibility = [], 
 ):
-  module, files = modules.popitem()
-  generate(
-    name = name + "_" + module,
-    srcs = native.glob(["**"]),
-    crate_name = crate_name,
-    cargo_toml = "Cargo.toml",
-    qml_modules = {
-      module: files
-    },
-    include_builtins = True
-  )
-
   for module, files in modules.items():
     print(module, files)
     generate(
@@ -30,11 +19,16 @@ def qml_module(
       qml_modules = {
         module: files
       },
-      include_builtins = False
+      cc_deps = cc_deps,
+      include_prefix = "private",
+      additional_includes = [
+        name + "_" + module + "-gen/out/cxxqtbuild/private/src",
+        "main_qml_com.ui.components-gen/out/cxxqtbuild/include/private/src/"
+      ]
     )
   cc_library(
     name = name,
-    deps = [ name + "_" + module for module in modules ] + ["@qt"] + [ name + "_" + module ],
+    deps = [ name + "_" + module for module in modules ] + ["@qt"],
     visibility = visibility,
     defines = [
       "QT_STATICPLUGIN",

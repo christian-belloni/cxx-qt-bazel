@@ -6,6 +6,7 @@ load("@cxx-qt-bazel//cxx-qt-bazel:deploy.bzl", "deploy_win")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_pkg//pkg:zip.bzl", "pkg_zip")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+load("@cxx-qt-bazel//cxx-qt-bazel:generate.bzl", "generate_cxxqt")
 
 qt_resource(
   name = "images",
@@ -17,8 +18,11 @@ qml_module(
   name = "main_qml",
   crate_name = "basic",
   modules = {
-    "com.ui.components": ["qml/main.qml"],
+    "com.ui.components": ["qml/main.qml", "src/state_cxxqt.rs"],
   },
+  cc_deps = [
+    "@cxx_qt_crates//:_bs_cxx-qt",
+  ],
   visibility = ["//visibility:public"]
 )
 
@@ -42,13 +46,14 @@ default_rustc_flags = [
 
 rust_binary(
   name = "basic",
-  srcs = ["src/main.rs"],
+  srcs = glob(["src/**/*.rs"]),
   deps = all_crate_deps() + [
     "main_qml",
-    "images"
+    "images",
+    # "qobjects"
   ],
   alwayslink = True,
-  data = ["@qt"]
+  data = ["@qt"],
 )
 
 deploy_win(
