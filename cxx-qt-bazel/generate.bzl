@@ -93,18 +93,20 @@ def _generate_qml_module(ctx, args, include_prefix, toml_dir):
     typeregister = _out_path(ctx, "qmltyperegistrar/%s_qmltyperegistration.cpp" % module_name.replace(".", "_"))
 
     
-    cachegen = _out_path(ctx, "qmlcachegen/%s/qmlcache_loader.cpp" % module_name.replace(".", "/"))
-    moc_files += [public, call, mod, res, typeregister, cachegen]
+    generate_cacheloader = False
+    moc_files += [public, call, mod, res, typeregister]
     moc_plugin_headers.append(moc_plugin)
     for f in qml_files:
       if f.endswith("qml"):
+        generate_cacheloader = True
         args.add("--qml-file", f)
         qml = _out_path(ctx, "qmlcachegen/%s/%s.cpp" % (module_name.replace(".", "/"), f.split("/").pop()))
         moc_files.append(qml)
       elif f.endswith("rs"):
         bridge_files.append(f)
         moc_files.append(_out_path(ctx, "moc/moc_%s.cxxqt.h.cpp" % f.split("/").pop().replace(".rs", "")))
-      
+    if generate_cacheloader:
+      moc_files.append(_out_path(ctx, "qmlcachegen/%s/qmlcache_loader.cpp" % module_name.replace(".", "/")))
   sources, hdrs = _generate_sources(
     ctx = ctx,
     args = args,

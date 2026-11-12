@@ -18,7 +18,8 @@ qml_module(
   name = "main_qml",
   crate_name = "basic",
   modules = {
-    "com.ui.components": ["qml/main.qml", "src/state_cxxqt.rs"],
+    "com.ui.components": ["qml/main.qml"],
+    "com.ui.states": ["src/state_cxxqt.rs"],
   },
   cc_deps = [
     "@cxx_qt_crates//:_bs_cxx-qt",

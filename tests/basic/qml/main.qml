@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Window
 
 import com.ui.components 1.0
+import com.ui.states 1.0
 
 ApplicationWindow {
     id: root

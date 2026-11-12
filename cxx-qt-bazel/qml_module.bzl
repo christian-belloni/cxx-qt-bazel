@@ -15,7 +15,7 @@ def qml_module(
     generate(
       name = name + "_" + module,
       srcs = native.glob(["**"]),
-      crate_name = crate_name,
+      crate_name = crate_name + "_" + module.replace(".", "_"),
       cargo_toml = "Cargo.toml",
       qml_modules = {
         module: files
