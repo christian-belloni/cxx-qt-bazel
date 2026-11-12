@@ -7,6 +7,7 @@ def qml_module(
   crate_name, 
   modules, 
   cc_deps = [],
+  additional_includes = [],
   visibility = [], 
 ):
   for module, files in modules.items():
@@ -22,8 +23,7 @@ def qml_module(
       cc_deps = cc_deps,
       include_prefix = "private",
       additional_includes = [
-        name + "_" + module + "-gen/out/cxxqtbuild/private/src",
-        "main_qml_com.ui.components-gen/out/cxxqtbuild/include/private/src/"
+        name + "_" + module + "-gen/out/cxxqtbuild/include/private/" + include for include in additional_includes
       ]
     )
   cc_library(

@@ -23,7 +23,8 @@ qml_module(
   cc_deps = [
     "@cxx_qt_crates//:_bs_cxx-qt",
   ],
-  visibility = ["//visibility:public"]
+  visibility = ["//visibility:public"],
+  additional_includes = ["src"]
 )
 
 default_rustc_flags = [
